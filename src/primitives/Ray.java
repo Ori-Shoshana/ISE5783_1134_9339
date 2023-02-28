@@ -3,12 +3,20 @@ package primitives;
 import java.util.Objects;
 
 public class Ray {
-    Point p0;
-    Vector dir;
+    final Point p0;
+    final Vector dir;
 
     public Ray(Point p0, Vector dir) {
         this.p0 = p0;
-        this.dir = dir;
+        this.dir = dir.normalize();
+    }
+
+    public Point getP0() {
+        return p0;
+    }
+
+    public Vector getDir() {
+        return dir;
     }
 
     @Override
@@ -24,13 +32,5 @@ public class Ray {
                 "p0=" + p0 +
                 ", dir=" + dir +
                 '}';
-    }
-
-    public Point getP0() {
-        return p0;
-    }
-
-    public Vector getDir() {
-        return dir;
     }
 }
