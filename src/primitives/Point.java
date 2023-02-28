@@ -3,57 +3,45 @@ package primitives;
 import java.util.Objects;
 
 public class Point {
-    double x ;
-    double y;
-    double z ;
+    Double3 xyz;
+
     public Point(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        xyz = new Double3(x, y, z);
+    }
+
+    Point(Double3 coordinates) {
+        xyz = coordinates;
+    }
+
+
+    Point add(Vector vec) {
+        return new Point(xyz.add(vec.xyz));
+    }
+
+    Vector subtract(Point p) {
+        return new Vector(xyz.subtract(p.xyz));
+    }
+
+    double distance(Point p) {
+        return Math.sqrt(distanceSquared(p));
+    }
+
+    double distanceSquared(Point p) {
+        Double3 diff = xyz.subtract(p.xyz);
+        return diff.d1 * diff.d1 + diff.d2 * diff.d2 + diff.d3 * diff.d3;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Point point)) return false;
-        return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0 && Double.compare(point.z, z) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y, z);
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getZ() {
-        return z;
-    }
-
-    public void setZ(double z) {
-        this.z = z;
+        return Objects.equals(xyz, point.xyz);
     }
 
     @Override
     public String toString() {
         return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
+                "xyz=" + xyz +
                 '}';
     }
 }
