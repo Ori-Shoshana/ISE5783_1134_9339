@@ -39,8 +39,7 @@ public class Vector extends Point {
     }
 
     public Vector normalize() {
-        double len = length();
-        return new Vector(xyz.d1 / len, xyz.d2 / len, xyz.d3 / len);
+        return new Vector(xyz.reduce(this.length()));
     }
 
     public double dotProduct(Vector vec) {
