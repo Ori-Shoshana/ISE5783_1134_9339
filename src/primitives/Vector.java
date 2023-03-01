@@ -1,6 +1,6 @@
 package primitives;
 
-/** class vector
+/** class vector that represents a vector in the space
  * @author ori shoshana and amir hay */
 public class Vector extends Point {
     /** Constructor to initialize vector that receives three numbers (coordinates)
