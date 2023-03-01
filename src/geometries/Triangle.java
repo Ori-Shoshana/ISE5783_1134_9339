@@ -3,7 +3,7 @@ package geometries;
 import primitives.Point;
 
 /**
- * Triangle class
+ * Triangle class which represents the location of a Triangle in space
  * @author Amir Hay and ori */
 public class Triangle extends Polygon {
     /**

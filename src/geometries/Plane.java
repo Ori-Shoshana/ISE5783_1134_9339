@@ -4,7 +4,7 @@ import primitives.Point;
 import primitives.Vector;
 
 /**
- * Plane class
+ * Plane class which represents the location of a plane in space
  * @author Amir Hay and ori */
 public class Plane implements Geometry {
     /** the point */

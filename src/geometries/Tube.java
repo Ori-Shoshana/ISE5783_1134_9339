@@ -5,7 +5,7 @@ import primitives.Ray;
 import primitives.Vector;
 
 /**
- * Tube class
+ * Tube class which represents the location of a Tube in space
  * @author Amir Hay and ori */
 public class Tube extends RadialGeometry{
 

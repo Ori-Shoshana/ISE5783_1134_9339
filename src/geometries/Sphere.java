@@ -4,7 +4,7 @@ import primitives.Point;
 import primitives.Vector;
 
 /**
- * Sphere class
+ * Sphere class which represents the location of a Sphere in space
  * @author Amir Hay and ori */
 public class Sphere extends RadialGeometry {
 
