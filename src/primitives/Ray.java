@@ -19,7 +19,7 @@ public class Ray {
 
     /**
      * Constructor to initialize Ray
-     * @param  p0 (point)
+     * @param p0  (point)
      * @param dir (vector)
      */
     public Ray(Point p0, Vector dir) {
