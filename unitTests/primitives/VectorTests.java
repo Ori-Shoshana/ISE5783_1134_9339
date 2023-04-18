@@ -25,7 +25,32 @@ class VectorTests {
     }
 
     @Test
+    void subtract() {
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Simple test
+        assertEquals(
+                new Vector(1, 1, 1),
+                new Vector(2, 3, 4).subtract(new Vector(1, 2, 3)),
+                "Wrong vector subtract");
+        // =============== Boundary Values Tests ==================
+        // TC11: test subtracting same vector
+        assertThrows(IllegalArgumentException.class,
+                () -> new Vector(1, 2, 3).subtract(new Vector(1, 2, 3)),
+                "Subtract v from v must throw exception");
+    }
+
+    @Test
     void testScale() {
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Simple test
+        assertEquals(new Vector(2, 4, 6),
+                new Vector(1, 2, 3).scale(2),
+                "Wrong vector scale");
+        // =============== Boundary Values Tests ==================
+        // TC11: test scaling to 0
+        assertThrows(IllegalArgumentException.class,
+                () -> new Vector(1, 2, 3).scale(0d),
+                "Scale by 0 must throw exception");
     }
 
     @Test
@@ -75,6 +100,14 @@ class VectorTests {
 
     @Test
     void testDotProduct() {
-
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Simple dotProduct test
+        assertEquals(-28d, v1.dotProduct(v2), 0.00001, "dotProduct() wrong value");
+        // =============== Boundary Values Tests ==================
+        // TC11: dotProduct for orthogonal vectors
+        assertEquals(
+                0d, v1.dotProduct(v3),
+                0.00001,
+                "dotProduct() for orthogonal vectors is not zero");
     }
 }

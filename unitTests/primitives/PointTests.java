@@ -57,7 +57,7 @@ class PointTests {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
         assertEquals(14d, new Point(1, 1, 1).distanceSquared(new Point(2, 3, 4)), 0.0001, //
-                "Wrong squared distance between the point and itself");
+                 "Wrong squared distance between the point and itself");
 
         // =============== Boundary Values Tests ==================
         // TC11: test distance with the same point
