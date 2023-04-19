@@ -68,10 +68,10 @@ public class Tube extends RadialGeometry {
             //return the vector from the point to the start of the ray
             return point.subtract(axisRay.getP0()).normalize();
         }
-        Point o = axisRay.getP0().add(axisRay.getDir().scale(t));
+        Point p = axisRay.getP0().add(axisRay.getDir().scale(t));
         //print the point and the projection
         System.out.println("point: " + point);
-        System.out.println("projection: " + o);
-        return point.subtract(o).normalize();
+        System.out.println("projection: " + p);
+        return point.subtract(p).normalize();
     }
 }

@@ -9,10 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class TubeTests {
 
     @Test
-    void testGetAxisRay() {
-    }
-
-    @Test
     void testGetNormal() {
         Tube tube = new Tube(1,new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)));
 
