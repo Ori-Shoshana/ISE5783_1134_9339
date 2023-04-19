@@ -23,11 +23,14 @@ public class Plane implements Geometry {
      * Constructor to initialize Tube based object with a point and a normal
      *
      * @param q0     the point value
-     * @param normal the noraml value
+     * @param vector the vector value
      */
-    public Plane(Point q0, Vector normal) {
+    public Plane(Point q0, Vector vector) {
         this.q0 = q0;
-        this.normal = normal;
+        if(vector.length()!=1)
+            vector.normalize();
+        vector=normal;
+        this.normal = vector;
     }
 
     /**
@@ -39,7 +42,10 @@ public class Plane implements Geometry {
      */
     public Plane(Point point1, Point point2, Point point3) {
         this.q0 = point1;
-        this.normal = null;
+        Vector U = point1.subtract(point2);
+        Vector V = point1.subtract(point3);
+        Vector vec = U.crossProduct(V);
+        this.normal = vec.normalize();
     }
 
     @Override
