@@ -40,7 +40,8 @@ public class Sphere extends RadialGeometry {
 
     @Override
     public Vector getNormal(Point point) {
-        return null;
+        Vector vec = point.subtract(center);
+        return vec.normalize();
     }
 
 }
