@@ -26,7 +26,7 @@ class TriangleTests {
         Triangle triangle = new Triangle(p1, p2, p3);
         Vector vec = new Vector(0.5, 0.5, 0.5).normalize();
         assertTrue((triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec)) ||
-                (triangle.getNormal(new Point(8.5, 0.5, 0.5)).equals(vec.scale(-1.8))), "ERROR: getNormal() wrong value");
+                (triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec.scale(-1.0))), "ERROR: getNormal() wrong value");
         //TC02 if the vector is normal
         assertTrue(triangle.getNormal(p1).length() == 1, "ERROR: the vector was not normal");
     }
