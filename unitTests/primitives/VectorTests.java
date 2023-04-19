@@ -32,7 +32,7 @@ class VectorTests {
      * Test method for {@link primitives.Point#subtract(primitives.Point)}.
      */
     @Test
-    void testsubtract() {
+    void testSubtract() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
         assertEquals(
