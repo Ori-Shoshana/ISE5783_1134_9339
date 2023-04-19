@@ -15,9 +15,7 @@ public class Vector extends Point {
      *          and throws an exception if all the values are zero
      */
     public Vector(double x, double y, double z) {
-        super(x, y, z);
-        if (xyz.equals(Double3.ZERO))
-            throw new IllegalArgumentException("The vector cannot be vector 0");
+      this(new Double3(x,y,z));
     }
 
     /**

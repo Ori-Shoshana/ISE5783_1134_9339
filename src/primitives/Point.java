@@ -5,8 +5,9 @@ import java.util.Objects;
 /** Point class which represents the location of a point in space
  * @author Amir Hay and ori */
 public class Point {
-    /** the point */
-    final protected Double3 xyz;
+    /** the 3D values of the point
+     */
+    final Double3 xyz;
 
     /** Constructor to initialize Point based object with three number values
      * @param x first number value
@@ -31,20 +32,23 @@ public class Point {
 
     /** subtracts point by point
      * @param point the point
-     * @return a vector of the subtracts*/
+     * @return a vector of the subtracts
+     * @throws IllegalArgumentException in case of resulting Vector(0,0,0)
+     */
     public Vector subtract(Point point) {
         return new Vector(xyz.subtract(point.xyz));
     }
 
-    /** Calculate distance from point to point
-     * @param point the point
-     * @return the distance from point to point*/
+    /** Calculate distance from one point to another
+     * @param point the second point
+     * @return the euclidean distance between two points
+     */
     public double distance(Point point) {
         return Math.sqrt(distanceSquared(point));
     }
 
     /** Calculates distance from point to point in a square
-     * @param point the point
+     * @param point the second point
      * @return  the distance from point to point in a square */
     public double distanceSquared(Point point) {
         Double3 diff = xyz.subtract(point.xyz);

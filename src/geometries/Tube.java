@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import static primitives.Util.alignZero;
+
 /**
  * Tube class which represents the location of a Tube in space
  *
@@ -49,23 +51,28 @@ public class Tube extends RadialGeometry {
     @Override
     public Vector getNormal(Point point) {
 
+        Point p0 = axisRay.getP0();
+        Vector v = axisRay.getDir();
+
         // Check if the given point is equal to the starting point of the axis ray
-        if (point.equals(axisRay.getP0())) {
-            throw new IllegalArgumentException("point cannot be equal to axisRay.getP0()");
+        if (point.equals(p0)) {
+            throw new IllegalArgumentException("point cannot be equal to p0");
         }
 
-        // Calculate the parameter t by taking the dot product of the vector from the starting point of the axis ray to the given point with the direction vector of the axis ray
-        double t = point.subtract(axisRay.getP0()).dotProduct(axisRay.getDir());
+        // Calculate the parameter t by taking the dot product of the vector from the
+        // starting point of the axis ray to the given point with the direction vector of the axis ray
+        double t = alignZero(point.subtract(p0).dotProduct(v));
 
         // If t is 0, return the normalized vector from the given point to the starting point of the axis ray
         if (t == 0) {
             // The point is against the axis start point
             // Return the vector from the given point to the start of the ray, normalized
-            return point.subtract(axisRay.getP0()).normalize();
+            return point.subtract(p0).normalize();
         }
 
-        // Calculate the projection of the given point onto the axis ray by adding the scaled direction vector of the axis ray to the starting point of the axis ray
-        Point p = axisRay.getP0().add(axisRay.getDir().scale(t));
+        // Calculate the projection of the given point onto the axis ray by adding the scaled
+        // direction vector of the axis ray to the starting point of the axis ray
+        Point p = p0.add(v.scale(t));
 
         // Return the normalized vector from the given point to the calculated projection as the normal vector
         return point.subtract(p).normalize();
