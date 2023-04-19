@@ -39,6 +39,9 @@ class PointTests {
                 "Subtract P from P must throw exception");
     }
 
+    /**
+     * Test method for {@link primitives.Point#distance(primitives.Point)}.
+     */
     @Test
     void testDistance() {
         // ============ Equivalence Partitions Tests ==============
@@ -51,7 +54,9 @@ class PointTests {
         assertEquals(0d, p.distance(p), 0.0001, //
                 "Wrong distance between the point and itself");
     }
-
+    /**
+     * Test method for {@link primitives.Point#distanceSquared(primitives.Point)}.
+     */
     @Test
     void testDistanceSquared() {
         // ============ Equivalence Partitions Tests ==============
