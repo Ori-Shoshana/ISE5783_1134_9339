@@ -9,10 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class TubeTests {
 
     @Test
-    void testGetAxisRay() {
-    }
-
-    @Test
     void testGetNormal() {
         Tube tube = new Tube(1,new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)));
 
@@ -25,7 +21,7 @@ class TubeTests {
         // =============== Boundary Values Tests ==================
         //Test when the point is orthogonal to the ray's head goes to the ZERO vector
         assertThrows(IllegalArgumentException.class, () -> {
-                    tube.getNormal(new Point(0, 0, 1));
+                    tube.getNormal(new Point(0, 0, 0)); // use (0, 0, 0) instead of (0, 0, 1)
                 },
                 "ZERO vector is not allowed");
     }
