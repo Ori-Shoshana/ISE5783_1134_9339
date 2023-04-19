@@ -43,14 +43,12 @@ class PlaneTests {
         // TC01: Three non-collinear points
         Point p1 = new Point(1, 2, 3);
         Point p2 = new Point(2, 3, 4);
-        Point p3 = new Point(-1, 2, 0);
-        Plane plane = new Plane(p1, p2, p3);
-        // ensure there are no exceptions
-        assertDoesNotThrow(() -> plane.getNormal(), "");
-        // generate the test result
-        Vector result = plane.getNormal();
-        // ensure the result is not the zero vector
-        assertFalse(result.equals(Double3.ZERO), "Plane's normal is the zero vector");
+        Point p3= new Point( 3,  4, 6);
+        Plane plane = new Plane (p1, p2, p3);
+        Vector vec = (new Vector ( 1, -1, 0)).normalize();
+        assertTrue((plane.getNormal().equals (vec) || plane.getNormal().equals (vec.scale(  -1.0))),  "ERROR: getNormal() wrong value");
+        //TC02 if the vector is normal
+        assertEquals( 1, plane.getNormal().length(),  0.000001,  "ERROR: the vector was not normal");
     }
 
 }
