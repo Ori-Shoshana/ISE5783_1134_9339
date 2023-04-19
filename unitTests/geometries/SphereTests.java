@@ -3,10 +3,17 @@ package geometries;
 import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Vector;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testing Sphere
+ * @author ori shoshana and amir hay
+ */
 class SphereTests {
+
+    /**
+     * Test method for {@link geometries.Sphere#getNormal(Point)}.
+     */
     @Test
     void testGetNormal() {
 

@@ -10,7 +10,15 @@ import primitives.Double3;
 import primitives.Point;
 import primitives.Vector;
 
+/**
+ * Testing Plane
+ * @author ori shoshana and amir hay
+ */
 class PlaneTests {
+
+    /**
+     * Test method for {@link geometries.Plane#Plane(Point, Point, Point)}.
+     */
     @Test
     void testPlane() {
         // ====Boundary Values Tests ====
@@ -25,6 +33,10 @@ class PlaneTests {
         Point p6 = new Point( 1,  1,  3);
         assertThrows (IllegalArgumentException.class, () -> new Plane (p4, p5, p6), "ERROR: three points are on the same line");
     }
+
+    /**
+     * Test method for {@link geometries.Plane#getNormal()}.
+     */
     @Test
     public void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============

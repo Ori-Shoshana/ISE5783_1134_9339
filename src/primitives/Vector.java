@@ -2,7 +2,6 @@ package primitives;
 
 /**
  * class vector that represents a vector in the space
- *
  * @author ori shoshana and amir hay
  */
 public class Vector extends Point {

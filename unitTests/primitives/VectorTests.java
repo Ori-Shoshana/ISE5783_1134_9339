@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static primitives.Util.isZero;
 
+/**
+ * Testing Vector
+ * @author ori shoshana and amir hay
+ */
 class VectorTests {
 
     Vector v1 = new Vector(1, 2, 3);
@@ -12,7 +16,7 @@ class VectorTests {
     Vector v3 = new Vector(0, 3, -2);
 
     /**
-     * Test method for {@link primitives.Vector#dotProduct(primitives.Vector)}.
+     * Test method for {@link primitives.Vector#add(primitives.Vector)}
      */
     @Test
     void testAdd() {
@@ -29,7 +33,7 @@ class VectorTests {
     }
 
     /**
-     * Test method for {@link primitives.Point#subtract(primitives.Point)}.
+     * Test method for {@link primitives.Vector#subtract(primitives.Vector)}.
      */
     @Test
     void testSubtract() {
@@ -46,6 +50,9 @@ class VectorTests {
                 "Subtract v from v must throw exception");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#scale(double)}.
+     */
     @Test
     void testScale() {
         // ============ Equivalence Partitions Tests ==============
@@ -60,6 +67,9 @@ class VectorTests {
                 "Scale by 0 must throw exception");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#crossProduct(primitives.Vector)}.
+     */
     @Test
     void testCrossProduct() {
         // ============ Equivalence Partitions Tests ==============
@@ -80,6 +90,9 @@ class VectorTests {
         );
     }
 
+    /**
+     * Test method for {@link primitives.Vector#lengthSquared()}.
+     */
     @Test
     void testLengthSquared() {
         // ============ Equivalence Partitions Tests ==============
@@ -89,11 +102,17 @@ class VectorTests {
                 "lengthSquared() wrong value");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#length()}.
+     */
     @Test
     void testLength() {
         assertEquals(5d, new Vector(0, 3, 4).length(), "length() wrong value");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#normalize()}.
+     */
     @Test
     void testNormalize() {
         Vector v = new Vector(3.5, -5, 10);
@@ -105,6 +124,9 @@ class VectorTests {
                 "head camnot be (0,0,0)");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#dotProduct(primitives.Vector)}.
+     */
     @Test
     void testDotProduct() {
         // ============ Equivalence Partitions Tests ==============

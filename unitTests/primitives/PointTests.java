@@ -4,9 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testing Point
+ * @author ori shoshana and amir hay
+ */
 class PointTests {
 
     Point p = new Point(1,2,3);
+
     /**
      * Test method for {@link primitives.Point#add(primitives.Vector)}.
      */

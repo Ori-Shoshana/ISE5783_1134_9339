@@ -7,9 +7,14 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Testing Cylinder
+ * @author ori shoshana and amir hay
+ */
 class CylinderTests {
+
     /**
-     * Test method for {@link geometries.Tube#getNormal(primitives.Point)}.
+     * Test method for {@link geometries.Cylinder#getNormal(primitives.Point)}.
      */
     @Test
     void testGetNormal() {

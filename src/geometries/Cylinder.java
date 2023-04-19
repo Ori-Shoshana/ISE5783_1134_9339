@@ -37,27 +37,38 @@ public class Cylinder extends Tube {
                 '}';
     }
 
+    /**
+     * Calculates and returns the normal vector of the object at the given point.
+     * The normal vector is calculated based on the axis of the object and the given point.
+     *
+     * @param point A {@link Point} object representing the point at which the normal vector is calculated.
+     * @return The normal vector as a {@link Vector} object.
+     * @throws UnsupportedOperationException if the normal vector cannot be calculated for the object.
+     */
     @Override
-    public Vector getNormal(Point point) {
+    public Vector getNormal(Point point) throws UnsupportedOperationException {
         Point p0 = axisRay.getP0();
         Vector v = axisRay.getDir();
 
+        // Check if the given point is the same as the base point of the axis
         if (point.equals(p0))
             return v;
 
-        // projection of P-p0 on the ray:
+        // Calculate the projection of (point - p0) onto the axis ray
         Vector u = point.subtract(p0);
 
-        // distance from p0 to the o who is in from of point
+        // Calculate the distance from p0 to the object in front of the given point
         double t = alignZero(u.dotProduct(v));
 
-        // if the point is at a base
+        // If the given point is at the base of the object or at the top of the object
         if (t == 0 || isZero(height - t))
             return v;
 
-        //the other point on the axis facing the given point
+        // Calculate the other point on the axis facing the given point
         Point o = p0.add(v.scale(t));
 
+        // Calculate the normalized vector from the given point to the other point on the axis
         return point.subtract(o).normalize();
     }
+
 }

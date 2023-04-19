@@ -60,13 +60,26 @@ public class Plane implements Geometry {
         return q0;
     }
 
+    /**
+     * Returns the normal vector of the object.
+     *
+     * @return The normal vector as a {@link Vector} object.
+     */
     public Vector getNormal() {
         return normal;
     }
 
+    /**
+     * Returns the normal vector of the object.
+     *
+     * @param point A {@link Point} object representing a point on the object. This parameter may be unused
+     *              in the implementation of this method.
+     * @return The normal vector as a {@link Vector} object.
+     */
     @Override
     public Vector getNormal(Point point) {
         return getNormal();
     }
+
 
 }

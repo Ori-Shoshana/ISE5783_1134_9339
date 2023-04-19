@@ -10,8 +10,6 @@ public abstract class RadialGeometry implements Geometry {
     /**
      * The Radius
      */
-
-
     protected double radius;
 
     /**
