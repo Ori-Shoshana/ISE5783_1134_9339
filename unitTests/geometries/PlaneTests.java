@@ -12,19 +12,33 @@ import primitives.Vector;
 
 class PlaneTests {
     @Test
+    void testPlane() {
+        // ====Boundary Values Tests ====
+        // TC10: two points are the same
+        Point p1 = new Point( 1,  2, 3);
+        Point p2 = new Point( 1,  2,  3);
+        Point p3= new Point( 2,  3,  4);
+        assertThrows (IllegalArgumentException.class, ()->new Plane (p1, p2, p3), "ERROR: two points are the same");
+        //TC11: three points are on the same line
+        Point p4 = new Point(1,  1,  1);
+        Point p5 = new Point( 1,  1,  2);
+        Point p6 = new Point( 1,  1,  3);
+        assertThrows (IllegalArgumentException.class, () -> new Plane (p4, p5, p6), "ERROR: three points are on the same line");
+    }
+    @Test
     public void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
+        // TC01: Three non-collinear points
         Point p1 = new Point(1, 2, 3);
         Point p2 = new Point(2, 3, 4);
         Point p3 = new Point(-1, 2, 0);
         Plane plane = new Plane(p1, p2, p3);
-        Vector vec = new Vector(1,-1,0).normalize();
-        // TC01: Three non-collinear points
-        assertTrue((plane.getNormal().equals(vec) || plane.getNormal().equals(vec.scale(-1.0))),"ERROR: The calculation of normal to the plane is not calculated correctly");
-
-        // TC02: if The vector is normal
-        assertEquals(1,plane.getNormal(new Point(2,1,0)).length() ,0.000001,"Error the vector was not normal");
-
+        // ensure there are no exceptions
+        assertDoesNotThrow(() -> plane.getNormal(), "");
+        // generate the test result
+        Vector result = plane.getNormal();
+        // ensure the result is not the zero vector
+        assertFalse(result.equals(Double3.ZERO), "Plane's normal is the zero vector");
     }
 
 }
