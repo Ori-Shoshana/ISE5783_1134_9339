@@ -6,15 +6,20 @@ import primitives.Vector;
 
 /**
  * Tube class which represents the location of a Tube in space
- * @author Amir Hay and ori */
-public class Tube extends RadialGeometry{
+ *
+ * @author Amir Hay and ori
+ */
+public class Tube extends RadialGeometry {
 
-    /** a ray */
+    /**
+     * Ray
+     */
     protected Ray axisRay;
 
     /**
      * Constructor to initialize Tube based object with a radius and a ray
-     * @param radius the radius value
+     *
+     * @param radius  the radius value
      * @param axisRay a ray value
      */
     public Tube(double radius, Ray axisRay) {
@@ -36,21 +41,20 @@ public class Tube extends RadialGeometry{
 
     @Override
     public Vector getNormal(Point point) {
-//        // projection of P-O on the ray:
-//        double t = point.subtract(axisRay.getP0()).dotProduct(axisRay.getDir());
-//        // the normal to the ray is the vector from the projection to P:
-//        return point.subtract(axisRay.getP0()).subtract(axisRay.getDir().scale(t)).normalize();
 
-//        double distance = axisRay.getDir().dotProduct(point.subtract(axisRay.getP0()));
-//        Point o = axisRay.getP0().add(axisRay.getDir().scale(distance));
-//        return point.subtract(o).normalize();
-        //we need to do p- o and then normalize it
-        //p is the point on the tube
-        //o is the projection of p on the ray
-        //we need to find o
-        // o = p0 + t * v
-        // T = (p - p0) * v
-
+        /** projection of P-O on the ray:
+         double t = point.subtract(axisRay.getP0()).dotProduct(axisRay.getDir());
+         the normal to the ray is the vector from the projection to P:
+         return point.subtract(axisRay.getP0()).subtract(axisRay.getDir().scale(t)).normalize();
+         double distance = axisRay.getDir().dotProduct(point.subtract(axisRay.getP0()));
+         Point o = axisRay.getP0().add(axisRay.getDir().scale(distance));
+         return point.subtract(o).normalize();
+         we need to do p- o and then normalize it
+         p is the point on the tube
+         o is the projection of p on the ray
+         we need to find o
+         o = p0 + t * v
+         T = (p - p0) * v */
         System.out.println("point: " + point);
         System.out.println("axisRay.getP0(): " + axisRay.getP0());
         System.out.println("axisRay.getDir(): " + axisRay.getDir());
