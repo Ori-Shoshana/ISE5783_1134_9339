@@ -1,7 +1,6 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Plane class which represents the location of a plane in space
