@@ -41,6 +41,12 @@ public class Ray {
         return dir;
     }
 
+    //יצרנו בישביל פונציה שתחשב חיתוך של קרן לצורה
+    public Point getPoint(double t){
+        return p0.add(dir.scale(t));
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

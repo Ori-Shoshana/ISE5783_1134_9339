@@ -1,6 +1,12 @@
 package geometries;
 
 import primitives.*;
+import primitives.Ray;
+
+import java.util.List;
+
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * Plane class which represents the location of a plane in space
@@ -83,5 +89,42 @@ public class Plane implements Geometry {
         return getNormal();
     }
 
+    public List<Point> kjcnw(Ray ray) {
+        Point p0 = ray.getP0();
+        Vector v = ray.getDir();
+
+        Vector n = normal;
+
+        if (q0.equals(p0)){
+            return null;
+        }
+
+        Vector P0_Q0 = q0.subtract(p0);
+
+        //numerator
+        double np0q0 = alignZero(n.dotProduct(P0_Q0));
+
+        if (isZero(np0q0)){
+            return null;
+        }
+
+        //denominator
+        double nv = alignZero(n.dotProduct(v));
+
+        //ray is lying in the plane axis
+        if (isZero(nv)){
+            return null;
+        }
+
+        double t = alignZero(np0q0 / nv);
+
+        if(t <= 0){
+            return null;
+        }
+
+        Point point = ray.getPoint(t);
+
+        return List.of(point);
+    }
 
 }
