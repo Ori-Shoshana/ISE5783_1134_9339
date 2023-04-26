@@ -51,4 +51,7 @@ class PlaneTests {
         assertEquals( 1, plane.getNormal().length(),  0.000001,  "ERROR: the vector was not normal");
     }
 
+    @Test
+    void testFindIntersections() {
+    }
 }

@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 import static primitives.Util.alignZero;
 
 /**
@@ -76,5 +78,9 @@ public class Tube extends RadialGeometry {
 
         // Return the normalized vector from the given point to the calculated projection as the normal vector
         return point.subtract(p).normalize();
+    }
+
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }

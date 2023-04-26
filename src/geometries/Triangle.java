@@ -1,6 +1,9 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
+
+import java.util.List;
 
 /**
  * Triangle class which represents the location of a Triangle in space
@@ -17,5 +20,9 @@ public class Triangle extends Polygon {
      */
     public Triangle(Point point1, Point point2, Point point3) {
         super(point1, point2, point3);
+    }
+
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }

@@ -1,7 +1,10 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 /**
  * Sphere class which represents the location of a Sphere in space
@@ -54,5 +57,8 @@ public class Sphere extends RadialGeometry {
         return vec.normalize();
     }
 
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    }
 
 }
