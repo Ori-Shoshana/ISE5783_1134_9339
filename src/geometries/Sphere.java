@@ -12,23 +12,26 @@ import java.util.List;
  * @author Amir Hay and ori
  */
 public class Sphere extends RadialGeometry {
-
     /**
-     * a point
+     * The center point of the sphere.
      */
     private final  Point center;
 
     /**
-     * Constructor to initialize Sphere based object with a radius and center point
+     * Constructor for a sphere object.
      *
-     * @param radius the radius value
-     * @param center a point value
+     * @param radius The radius of the sphere.
+     * @param center The center point of the sphere.
      */
     public Sphere(double radius, Point center) {
         super(radius);
         this.center = center;
     }
-
+    /**
+     * Returns the center point of the sphere.
+     *
+     * @return The center point as a {@link Point} object.
+     */
     public Point getCenter() {
         return center;
     }
@@ -43,10 +46,10 @@ public class Sphere extends RadialGeometry {
 
 
     /**
-     * Calculates the normal vector of a surface at a given point on a sphere.
+     * Calculates and returns the normal vector to the surface of the sphere at a given point.
      *
-     * @param point The point on the surface of the sphere for which the normal vector needs to be calculated.
-     * @return The normalized normal vector at the given point.
+     * @param point The point on the surface of the sphere at which to calculate the normal vector.
+     * @return The normal vector as a {@link Vector} object.
      */
     @Override
     public Vector getNormal(Point point) {
@@ -56,7 +59,12 @@ public class Sphere extends RadialGeometry {
         // Normalize the vector to obtain the normal vector
         return vec.normalize();
     }
-
+    /**
+     * Finds the intersections of a given {@link Ray} with the sphere.
+     *
+     * @param ray The {@link Ray} object used to find the intersection.
+     * @return A list of {@link Point} objects representing the intersection points, or null if no intersection is found.
+     */
     public List<Point> findIntersections(Ray ray) {
         return null;
     }

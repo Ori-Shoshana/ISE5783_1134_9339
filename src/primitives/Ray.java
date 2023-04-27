@@ -3,24 +3,24 @@ package primitives;
 import java.util.Objects;
 
 /**
- * class Ray that represents a straight line in space
+ * The Ray class represents a ray in 3D space, defined by a starting point and a direction.
  *
  * @author ori shoshana and amir hay
  */
 public class Ray {
     /**
-     * A point
+     The starting point of the ray.
      */
     final private Point p0;
     /**
-     * A vector
+     The direction of the ray, normalized to a unit vector.
      */
     final private Vector dir;
 
     /**
-     * Constructor to initialize Ray
-     * @param p0  (point)
-     * @param dir (vector)
+     Constructs a new Ray with the given starting point and direction.
+     @param p0 the starting point of the ray.
+     @param dir the direction of the ray.
      */
     public Ray(Point p0, Vector dir) {
         this.p0 = p0;
@@ -28,20 +28,26 @@ public class Ray {
     }
 
     /**
-     * @return the point
+     Returns the starting point of the ray.
+     @return the starting point of the ray.
      */
     public Point getP0() {
         return p0;
     }
 
     /**
-     * @return the point
+     Returns the direction of the ray.
+     @return the direction of the ray.
      */
     public Vector getDir() {
         return dir;
     }
 
-    //יצרנו בישביל פונציה שתחשב חיתוך של קרן לצורה
+    /**
+     Returns the point at the given parameter value t along the ray.
+     @param t the parameter value.
+     @return the point at the given parameter value t along the ray.
+     */
     public Point getPoint(double t){
         return p0.add(dir.scale(t));
     }

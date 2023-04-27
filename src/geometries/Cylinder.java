@@ -25,7 +25,9 @@ public class Cylinder extends Tube {
         super(radius,axisRay);
         this.height = height;
     }
-
+    /**
+     * @return the height of the cylinder
+     */
     public double getHeight() {
         return height;
     }
@@ -72,7 +74,12 @@ public class Cylinder extends Tube {
         // Calculate the normalized vector from the given point to the other point on the axis
         return point.subtract(o).normalize();
     }
-
+    /**
+     * Calculates and returns a list of intersection points between the Cylinder and a given Ray.
+     *
+     * @param ray The Ray to intersect with the Cylinder.
+     * @return A list of Point objects representing the intersection points between the Cylinder and the Ray.
+     */
     public List<Point> findIntersections(Ray ray) {
         return null;
     }

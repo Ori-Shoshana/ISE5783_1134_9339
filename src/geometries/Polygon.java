@@ -86,12 +86,22 @@ public class Polygon implements Geometry {
                 throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
         }
     }
-
+    /**
+     * Gets the normal vector to the polygon at the given point on the polygon surface.
+     *
+     * @param point a point on the polygon surface
+     * @return the normal vector to the polygon at the given point
+     */
     @Override
     public Vector getNormal(Point point) {
         return plane.getNormal();
     }
-
+    /**
+     * Finds the intersection points between a ray and the polygon.
+     *
+     * @param ray the ray to check for intersection with the polygon
+     * @return a list of intersection points between the ray and the polygon
+     */
     public List<Point> findIntersections(Ray ray) {
         return null;
     }

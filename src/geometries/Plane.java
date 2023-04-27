@@ -15,20 +15,20 @@ import static primitives.Util.isZero;
  */
 public class Plane implements Geometry {
     /**
-     * The point
+     *  point on the plane.
      */
     private final Point q0;
 
     /**
-     * The noraml
+     * The normal vector to the plane, normalized to a unit vector.
      */
     private final Vector normal;
 
     /**
-     * Constructor to initialize Tube based object with a point and a normal
+     * Constructor to initialize Plane object with a point and a normal vector.
      *
      * @param q0     the point value
-     * @param vector the vector value
+     * @param vector the normal vector value
      */
     public Plane(Point q0, Vector vector) {
         this.q0 = q0;
@@ -36,11 +36,11 @@ public class Plane implements Geometry {
     }
 
     /**
-     * Constructor to initialize Tube based object with a three point and ...
+     * Constructor to initialize a Plane object with three points.
      *
-     * @param point1 first point value
-     * @param point2 second point value
-     * @param point3 three point value
+     * @param point1 the first point used to define the plane
+     * @param point2 the second point used to define the plane
+     * @param point3 the third point used to define the plane
      */
     public Plane(Point point1, Point point2, Point point3) {
         this.q0 = point1;
@@ -60,7 +60,11 @@ public class Plane implements Geometry {
                 ", normal=" + normal +
                 '}';
     }
-
+    /**
+     * Returns the point on the plane.
+     *
+     * @return The point on the plane as a {@link Point} object.
+     */
     public Point getQ0() {
         return q0;
     }
@@ -88,7 +92,12 @@ public class Plane implements Geometry {
     public Vector getNormal(Point point) {
         return getNormal();
     }
-
+    /**
+     * Finds the intersections of a given {@link Ray} with the plane.
+     *
+     * @param ray The {@link Ray} object used to find the intersection.
+     * @return A list of {@link Point} objects representing the intersection points, or null if no intersection is found.
+     */
     public List<Point> findIntersections(Ray ray) {
         /**
         Point p0 = ray.getP0();

@@ -39,7 +39,11 @@ public class Vector extends Point {
     public Vector add(Vector vector) {
         return new Vector(xyz.add(vector.xyz));
     }
-
+    /**
+     Returns a new Vector object that is the result of subtracting the given vector from this vector.
+     @param vector the vector to be subtracted from this vector
+     @return a new Vector object representing the result of the subtraction
+     */
     public Vector subtract(Vector vector) {
         return new Vector(xyz.subtract(vector.xyz));
     }

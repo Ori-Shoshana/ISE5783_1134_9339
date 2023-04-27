@@ -9,28 +9,31 @@ import java.util.List;
 import static primitives.Util.alignZero;
 
 /**
- * Tube class which represents the location of a Tube in space
+ * The Tube class represents a tube object in a 3D space.
+ * It is defined by a radius and an axis ray.
  *
  * @author Amir Hay and ori
  */
 public class Tube extends RadialGeometry {
 
-    /**
-     * Ray
-     */
+    /** The axis ray of the tube. */
     protected Ray axisRay;
 
     /**
-     * Constructor to initialize Tube based object with a radius and a ray
+     * Constructs a new Tube object with the specified radius and axis ray.
      *
-     * @param radius  the radius value
-     * @param axisRay a ray value
+     * @param radius the radius of the tube.
+     * @param axisRay the axis ray of the tube.
      */
     public Tube(double radius, Ray axisRay) {
         super(radius);
         this.axisRay = axisRay;
     }
-
+    /**
+     * Returns the axis ray of the tube.
+     *
+     * @return the axis ray of the tube.
+     */
     public Ray getAxisRay() {
         return axisRay;
     }
@@ -79,7 +82,12 @@ public class Tube extends RadialGeometry {
         // Return the normalized vector from the given point to the calculated projection as the normal vector
         return point.subtract(p).normalize();
     }
-
+    /**
+     * Finds the intersections of the given ray with the tube.
+     *
+     * @param ray the ray to find intersections with.
+     * @return a list of points representing the intersection points, or null if there are no intersections.
+     */
     public List<Point> findIntersections(Ray ray) {
         return null;
     }
