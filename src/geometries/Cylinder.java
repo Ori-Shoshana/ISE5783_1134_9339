@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
 
+import java.util.List;
+
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
@@ -71,4 +73,7 @@ public class Cylinder extends Tube {
         return point.subtract(o).normalize();
     }
 
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    }
 }

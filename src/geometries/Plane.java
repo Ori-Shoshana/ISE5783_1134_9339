@@ -89,7 +89,8 @@ public class Plane implements Geometry {
         return getNormal();
     }
 
-    public List<Point> kjcnw(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
+        /**
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
 
@@ -125,6 +126,8 @@ public class Plane implements Geometry {
         Point point = ray.getPoint(t);
 
         return List.of(point);
+         */
+        return null;
     }
 
 }

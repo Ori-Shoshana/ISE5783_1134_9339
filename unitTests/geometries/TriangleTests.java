@@ -30,4 +30,8 @@ class TriangleTests {
         //TC02 if the vector is normal
         assertTrue(triangle.getNormal(p1).length() == 1, "ERROR: the vector was not normal");
     }
+
+    @Test
+    void testFindIntersections() {
+    }
 }

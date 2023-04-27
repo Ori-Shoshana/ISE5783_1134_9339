@@ -27,4 +27,8 @@ class SphereTests {
         assertEquals(1,sphere.getNormal(new Point(1,1,0)).length(),0.000001,"Error the vector was not normal");
 
     }
+
+    @Test
+    void testFindIntersections() {
+    }
 }
