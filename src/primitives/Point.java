@@ -89,4 +89,8 @@ import java.util.Objects;
                     "xyz=" + xyz +
                     '}';
         }
+
+    public double getX() {
+        return xyz.d1;
     }
+}

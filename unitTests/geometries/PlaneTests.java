@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import geometries.Polygon;
 import primitives.Double3;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 
 /**
@@ -53,5 +54,7 @@ class PlaneTests {
 
     @Test
     void testFindIntersections() {
+        Plane plane = new Plane(new Point(0,2,1),new Point(2,0,0),new Point(3,3,4));
+        assertEquals(new Point(1.6666666666666665,1.6666666666666665,1.6666666666666665),plane.findIntersections(new Ray(new Point(-2,-2,-2),new Vector(1.5,1.5,1.5))).get(0),"ERROR: its not the right Intersection");
     }
 }

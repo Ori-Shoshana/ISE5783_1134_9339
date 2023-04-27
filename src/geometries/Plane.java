@@ -99,7 +99,7 @@ public class Plane implements Geometry {
      * @return A list of {@link Point} objects representing the intersection points, or null if no intersection is found.
      */
     public List<Point> findIntersections(Ray ray) {
-        /**
+
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
 
@@ -135,8 +135,8 @@ public class Plane implements Geometry {
         Point point = ray.getPoint(t);
 
         return List.of(point);
-         */
-        return null;
+
+        //return null;
     }
 
 }
