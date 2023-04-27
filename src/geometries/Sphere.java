@@ -6,6 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
+
 /**
  * Sphere class which represents the location of a Sphere in space
  *
@@ -66,7 +68,40 @@ public class Sphere extends RadialGeometry {
      * @return A list of {@link Point} objects representing the intersection points, or null if no intersection is found.
      */
     public List<Point> findIntersections(Ray ray) {
-        return null;
-    }
 
+        Point p0 = ray.getP0();
+        Vector v = ray.getDir();
+
+        if (p0.equals(center)) {
+            Point point = center.add(v.scale(radius));
+            return List.of(point);
+        }
+
+        Vector u = center.subtract(p0);
+        double tm = v.dotProduct(u);
+        double d = Math.sqrt(u.lengthSquared() - tm * tm);
+
+        if (d >= radius)
+            return null;
+
+        double th = Math.sqrt(radius * radius - d * d);
+        double t1 = alignZero(tm + th);
+        double t2 = alignZero(tm - th);
+
+        if (t1 <= 0 && t2 <= 0)
+            return null;
+
+        Point point1 = ray.getPoint(t1);
+        Point point2 = ray.getPoint(t2);
+
+        if (t1 > 0 && t2 > 0) {
+            return List.of(point1, point2);
+        }
+
+        if (t1 <= 0 && t2 > 0) {
+            return List.of(point2);
+        }
+
+        return List.of(point1);
+    }
 }
