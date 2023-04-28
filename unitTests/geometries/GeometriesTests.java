@@ -13,9 +13,9 @@ class GeometriesTests {
 
     @Test
     void testFindIntersections() {
-        Geometries geometries = new Geometries(new Sphere(2.5,new Point(0,0,1.13)),
+        Geometries geometries = new Geometries(new Sphere(3,new Point(0,0,1.13)),
                 new Plane(new Point(0, 0, 5), new Point(-15,0,0),new Point(0,-10,0)),
-                new Triangle(new Point(-10, 0, 0), new Point(0, -5, 0), new Point(0, 5, 0)));
+                new Triangle(new Point(-2, 0, 0), new Point(1, 0, 0), new Point(-1.18, 3.52, 0)));
 
         // ============ Equivalence Partitions Tests ==============
         //TC01: Some shapes are cut (but not all)
@@ -36,12 +36,12 @@ class GeometriesTests {
         assertEquals(4, res2.size(), "All shapes are cut");
 
         //TC13: All shapes are not cut
-        Ray r4 = new Ray(new Point(-1, -1, 1), new Vector(-3, -5, -1.5));
+        Ray r4 = new Ray(new Point(0, 10, 0), new Vector(10, 2, 0));
         List<Point> res3 = geometries.findIntersections(r4);
         assertNull(res3, "All shapes are not cut");
 
         //TC14: Only one shape is cut
-        Ray r5 = new Ray(new Point(-1, -1, 1), new Vector(1, 1, 1));
+        Ray r5 = new Ray(new Point(0, 10, 0), new Vector(7.43, 0.36, 12.65));
         List<Point> res4 = geometries.findIntersections(r5);
         assertEquals(1, res4.size(), "Only one shape is cut");
 
