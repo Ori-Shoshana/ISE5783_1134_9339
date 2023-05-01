@@ -53,7 +53,9 @@ class PlaneTests {
         //TC02 if the vector is normal
         assertEquals( 1, plane.getNormal().length(),  0.000001,  "ERROR: the vector was not normal");
     }
-
+    /**
+     * Test method for {@link geometries.Plane#findIntersections(Ray)}.
+     */
     @Test
     void testFindIntersections() {
         Plane p1 = new Plane(new Point(-1, 0, 0), new Point(0,-1,0),new Point(0,0,1));
