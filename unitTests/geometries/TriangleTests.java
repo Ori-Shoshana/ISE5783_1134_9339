@@ -14,7 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author ori shoshana and amir hay
  */
 
-class TriangleTests {
+class
+TriangleTests {
 
     /**
      * Test method for {@link geometries.Triangle#getNormal(Point)}.

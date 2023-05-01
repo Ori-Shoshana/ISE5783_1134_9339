@@ -19,6 +19,9 @@ class GeometriesTests {
      It creates a Geometries object that contains a Sphere, a Plane, and a Triangle.
      Then, it performs Equivalence Partitions and Boundary Values Tests on the findIntersections method.
      */
+    /**
+     * Test method for {@link geometries.Geometries#findIntersections(Ray)}.
+     */
     @Test
     void testFindIntersections() {
         Geometries geometries = new Geometries(new Sphere(3,new Point(0,0,1.13)),
