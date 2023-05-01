@@ -45,6 +45,9 @@ class CylinderTests {
 
     }
 
+    /**
+     * Test method for {@link geometries.Sphere#findIntersections(Ray)}.
+     */
     @Test
     void testFindIntersections() {
     }

@@ -23,6 +23,7 @@ class TriangleTests {
     void testGetNormal() {
     //=== Equivalence Partitions Tests ===
     //TC01: normal to triangle
+        
         Point p1 = new Point(1, 0, 0);
         Point p2 = new Point(0, 1, 0);
         Point p3 = new Point(0, 0, 1);
@@ -31,9 +32,13 @@ class TriangleTests {
         assertTrue((triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec)) ||
                 (triangle.getNormal(new Point(0.5, 0.5, 0.5)).equals(vec.scale(-1.0))), "ERROR: getNormal() wrong value");
         //TC02 if the vector is normal
-        assertTrue(triangle.getNormal(p1).length() == 1, "ERROR: the vector was not normal");
+        assertEquals( 1, triangle.getNormal(p1).length(),  0.000001,  "ERROR: the vector was not normal");
+
     }
 
+    /**
+     * Test method for {@link geometries.Sphere#findIntersections(Ray)}.
+     */
     @Test
     void testFindIntersections() {
         Triangle triangle = new Triangle(new Point(3,0,0), new Point(0,3,0), new Point(0, 0, 4));

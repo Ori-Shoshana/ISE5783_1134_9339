@@ -84,8 +84,11 @@ public class PolygonTests {
     }
 
 
+    /**
+     *Test method for {@link geometries.Polygon#findIntersections(Ray)}.
+     */
     @Test
-    void findIntersections() {
+    void testFindIntersections() {
         Polygon p = new Polygon(new Point(0, 0, 0), new Point(1, 0, 0), new Point(1, 1, 0), new Point(0, 1, 0));
 
         // ============ Equivalence Partitions Tests ==============
