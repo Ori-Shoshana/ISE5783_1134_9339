@@ -67,6 +67,7 @@ public class Sphere extends RadialGeometry {
      * @param ray The {@link Ray} object used to find the intersection.
      * @return A list of {@link Point} objects representing the intersection points, or null if no intersection is found.
      */
+    @Override
     public List<Point> findIntersections(Ray ray) {
 
         Point p0 = ray.getP0();

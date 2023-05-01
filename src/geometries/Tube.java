@@ -88,6 +88,7 @@ public class Tube extends RadialGeometry {
      * @param ray the ray to find intersections with.
      * @return a list of points representing the intersection points, or null if there are no intersections.
      */
+    @Override
     public List<Point> findIntersections(Ray ray) {
         return null;
     }

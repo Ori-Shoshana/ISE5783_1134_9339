@@ -55,7 +55,7 @@ class PlaneTests {
     }
 
     @Test
-    void findIntersections() {
+    void testFindIntersections() {
         Plane p1 = new Plane(new Point(-1, 0, 0), new Point(0,-1,0),new Point(0,0,1));
 
         // ============ Equivalence Partitions Tests ==============

@@ -1,7 +1,9 @@
 package geometries;
 
+import static primitives.Util.checkSign;
 import static primitives.Util.isZero;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import primitives.Point;
@@ -102,8 +104,32 @@ public class Polygon implements Geometry {
      * @param ray the ray to check for intersection with the polygon
      * @return a list of intersection points between the ray and the polygon
      */
+    @Override
     public List<Point> findIntersections(Ray ray) {
-        return null;
+        // Get the starting point of the ray
+        Point p0 = ray.getP0();
+
+        // Create a list of vectors from the starting point to each vertex of the polygon
+        List<Vector> vectors = new ArrayList<>(vertices.size());
+        for (Point vertex : vertices) {
+            vectors.add(vertex.subtract(p0));
+        }
+
+        // Loop over each vertex of the polygon
+        for (int i = 0; i < vertices.size(); i++) {
+            // Calculate the normal vector to the plane of the triangle formed by the ray and two edges of the polygon
+            Vector N = vectors.get(i).crossProduct(vectors.get((i + 1) % vertices.size())).normalize();
+
+            // Calculate the dot product between the ray's direction vector and the normal vector
+            double dotProduct = ray.getDir().dotProduct(N);
+
+            // If the dot product is negative, then the ray is going away from the polygon
+            if (dotProduct < 0)
+                return null;
+        }
+
+        // If the ray intersects the polygon's plane, return the intersection points
+        return plane.findIntersections(ray);
     }
 
-    }
+}
