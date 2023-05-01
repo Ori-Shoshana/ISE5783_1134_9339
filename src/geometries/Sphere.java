@@ -2,8 +2,11 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Util;
 import primitives.Vector;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static primitives.Util.alignZero;
@@ -17,7 +20,7 @@ public class Sphere extends RadialGeometry {
     /**
      * The center point of the sphere.
      */
-    private final  Point center;
+    private final Point center;
 
     /**
      * Constructor for a sphere object.
@@ -29,6 +32,7 @@ public class Sphere extends RadialGeometry {
         super(radius);
         this.center = center;
     }
+
     /**
      * Returns the center point of the sphere.
      *
@@ -61,51 +65,45 @@ public class Sphere extends RadialGeometry {
         // Normalize the vector to obtain the normal vector
         return vec.normalize();
     }
+
     /**
      * Finds the intersections of a given {@link Ray} with the sphere.
      *
      * @param ray The {@link Ray} object used to find the intersection.
      * @return A list of {@link Point} objects representing the intersection points, or null if no intersection is found.
      */
+    @Override
     public List<Point> findIntersections(Ray ray) {
 
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
-
-        if (p0.equals(center)) {
-            Point point = center.add(v.scale(radius));
-            return List.of(point);
+        Vector u;
+        double tm;
+        double dsquare;
+        double rsquare = radius * radius;
+        if (center.equals(p0)) {
+            tm = 0;
+            dsquare = -tm * tm;
         }
-
-        Vector u = center.subtract(p0);
-        double tm = v.dotProduct(u);
-        double d = Math.sqrt(u.lengthSquared() - tm * tm);
-
-        if (d >= radius)
+        else {
+            u = center.subtract(p0);
+            tm = v.dotProduct(u);
+            dsquare = u.dotProduct(u) - tm * tm;
+        }
+        if (dsquare >= rsquare) {
             return null;
-
-        double th = Math.sqrt(radius * radius - d * d);
-        double t1 = alignZero(tm + th);
-        double t2 = alignZero(tm - th);
-
-        if (t1 <= 0 && t2 <= 0)
-            return null;
-
-        Point point1;
-        Point point2;
-
-        if (t1 > 0 && t2 > 0) {
-            point1 = ray.getPoint(t1);
-            point2 = ray.getPoint(t2);
-            return List.of(point1, point2);
         }
-
-        if (t1 <= 0 && t2 > 0) {
-            point2 = ray.getPoint(t2);
-            return List.of(point2);
+        double th = Math.sqrt(rsquare - dsquare);
+        if (alignZero(tm + th) > 0) {
+            if (alignZero(tm - th) > 0) {
+                return List.of(ray.getPoint(tm + th), ray.getPoint(tm - th));
+            }
+            return List.of(ray.getPoint(tm + th));
         }
-
-        point1 = ray.getPoint(t1);
-        return List.of(point1);
+        if (alignZero(tm - th) > 0) {
+            return List.of(ray.getPoint(tm - th));
+        }
+        return null;
+        //return List.of((tm+th!=0?p0.add(v.scale(tm+th)):null),p0.add(v.scale(tm-th)));
     }
 }
