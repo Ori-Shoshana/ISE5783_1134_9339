@@ -72,19 +72,18 @@ public class Camera {
      * @return The ray that passes through the specified pixel on the view plane.
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-        return null;
-        /** Point pc = p0.add(vTo.scale(distance));     // center of the view plane
-         double Ry = height / nY;                      // Ratio - pixel height
-         double Rx = width / nX;                       // Ratio - pixel width
+         Point pc = p0.add(vTo.scale(distance));     // The point center of the view plane
+         double Ry = height / nY;                      //  The pixel height
+         double Rx = width / nX;                       //  The pixel width
 
-         double yJ = alignZero(-(i - (nY - 1) / 2d) * Ry);       // move pc Yi pixels
-         double xJ = alignZero((j - (nX - 1) / 2d) * Rx);        // move pc Xj pixels
+         double yJ = alignZero(-(i - (nY - 1) / 2d) * Ry);
+         double xJ = alignZero((j - (nX - 1) / 2d) * Rx);
 
          Point PIJ = pc;
          if (!isZero(xJ)) PIJ = PIJ.add(vRight.scale(xJ));
          if (!isZero(yJ)) PIJ = PIJ.add(vUp.scale(yJ));
 
-         return new Ray(p0, PIJ.subtract(p0));*/
+         return new Ray(p0, PIJ.subtract(p0));
     }
 
     /**
