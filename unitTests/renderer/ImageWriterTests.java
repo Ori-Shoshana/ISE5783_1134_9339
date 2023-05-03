@@ -11,7 +11,7 @@ class ImageWriterTests {
         ImageWriter imageWriter = new ImageWriter("imageWithGrid", width, height);
 
         // Set the background color and grid color
-        Color bgColor = new Color(128, 218, 235); // light blue
+        Color bgColor = new Color(0, 0, 255); // light blue
         Color gridColor = new Color(255, 0, 0); // glowing green
 
         // Calculate the dimensions of each grid square
