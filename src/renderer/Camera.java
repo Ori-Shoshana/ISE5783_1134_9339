@@ -8,6 +8,7 @@ import static primitives.Util.*;
 
 /**
  * A class that represents a camera.
+ * @author ori and amir
  */
 public class Camera {
 

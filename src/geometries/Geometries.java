@@ -3,11 +3,13 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
 /**
- The Geometries class represents a collection of Intersectable shapes.
- It implements the Intersectable interface to allow for finding intersections with a given Ray.
+ * The Geometries class represents a collection of Intersectable shapes.
+ * It implements the Intersectable interface to allow for finding intersections with a given Ray.
  */
 public class Geometries implements Intersectable {
 
@@ -19,41 +21,45 @@ public class Geometries implements Intersectable {
     public Geometries() {
         shapes = new LinkedList<Intersectable>();
     }
+
     /**
      * Constructs a collection of shapes with the given Intersectable objects.
+     *
      * @param geometries the shapes to add to the collection
      */
     public Geometries(Intersectable... geometries) {
-        this.shapes = new LinkedList<>();
-        for (Intersectable geometry : geometries)
-            this.shapes.add(geometry);
+        this();
+       add(geometries);
     }
+
     /**
      * Adds the given Intersectable shapes to the collection.
+     *
      * @param geometries the shapes to add
      */
     public void add(Intersectable... geometries) {
-        for (Intersectable geometry : geometries)
-            this.shapes.add(geometry);
+        Collections.addAll(shapes, geometries);
     }
 
     /**
      * Finds all intersection points of the given Ray with the shapes in the collection.
+     *
      * @param ray the Ray to find intersections with
      * @return a list of intersection Points, or null if there are no intersections
      */
     @Override
     public List<Point> findIntersections(Ray ray) {
-        List<Point> intersectPoints = null;
-        for (Intersectable geometry : this.shapes) {
-            List<Point> insects = geometry.findIntersections(ray);
-            if(insects != null){
-                if(intersectPoints == null)
-                    intersectPoints = new LinkedList<Point>();
-                intersectPoints.addAll(insects);
+        List<Point> result = new LinkedList<>();
+        for (Intersectable geometry : shapes) {
+            List<Point> shapePoints = geometry.findIntersections(ray);
+            if (shapePoints != null) {
+                result.addAll(shapePoints);
             }
         }
-        return intersectPoints;
+        if (result.isEmpty()){
+            return  null;
+        }
+        return result;
     }
 
 }
