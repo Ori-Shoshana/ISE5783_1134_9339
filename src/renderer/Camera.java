@@ -6,19 +6,28 @@ import primitives.Vector;
 
 import static primitives.Util.*;
 
+/**
+ * A class that represents a camera.
+ */
 public class Camera {
+
+    private Point p0; // Camera location
+    private Vector vUp; // Upward direction
+    private Vector vTo; // Forward direction
+    private Vector vRight; // Right direction
+    private double width; // Width of the view plane
+    private double height; // Height of the view plane
+    private double distance; // Distance of the view plane from the camera
+
     /**
-     * a class that represents a camera.
+     * Constructs a camera with the given location, forward direction, and upward direction.
+     * The upward direction must be orthogonal to the forward direction.
+     *
+     * @param p0  The location of the camera.
+     * @param vTo The forward direction of the camera.
+     * @param vUp The upward direction of the camera.
+     * @throws IllegalArgumentException If the upward direction is not orthogonal to the forward direction.
      */
-    private Point p0;
-    private Vector vUp;
-    private Vector vTo;
-    private Vector vRight;
-    private double width;
-    private double height;
-    private double distance;
-
-
     public Camera(Point p0, Vector vTo, Vector vUp) throws IllegalArgumentException {
         if (!isZero(vTo.dotProduct(vUp))) {
             throw new IllegalArgumentException("The vectors are not orthogonal");
@@ -29,18 +38,39 @@ public class Camera {
         this.vRight = vTo.crossProduct(vUp).normalize();
     }
 
-
+    /**
+     * Sets the size of the view plane.
+     *
+     * @param width  The width of the view plane.
+     * @param height The height of the view plane.
+     * @return This camera object.
+     */
     public Camera setVPSize(double width, double height) {
         this.width = width;
         this.height = height;
         return this;
     }
 
+    /**
+     * Sets the distance of the view plane from the camera.
+     *
+     * @param distance The distance of the view plane from the camera.
+     * @return This camera object.
+     */
     public Camera setVPDistance(double distance) {
         this.distance = distance;
         return this;
     }
 
+    /**
+     * Constructs a ray that passes through the specified pixel on the view plane.
+     *
+     * @param nX The number of pixels in the X direction.
+     * @param nY The number of pixels in the Y direction.
+     * @param j  The index of the pixel in the X direction.
+     * @param i  The index of the pixel in the Y direction.
+     * @return The ray that passes through the specified pixel on the view plane.
+     */
     public Ray constructRay(int nX, int nY, int j, int i) {
         return null;
         /** Point pc = p0.add(vTo.scale(distance));     // center of the view plane
@@ -57,30 +87,65 @@ public class Camera {
          return new Ray(p0, PIJ.subtract(p0));*/
     }
 
+    /**
+     * Returns the location of the camera.
+     *
+     * @return The location of the camera
+     */
     public Point getP0() {
         return p0;
     }
 
+    /**
+     * Returns the up direction of the camera.
+     *
+     * @return The up direction of the camera
+     */
     public Vector getvUp() {
         return vUp;
     }
 
+    /**
+     * Returns the direction the camera is facing.
+     *
+     * @return The direction the camera is facing
+     */
     public Vector getvTo() {
         return vTo;
     }
 
+    /**
+     * Returns the right direction of the camera.
+     *
+     * @return The right direction of the camera
+     */
     public Vector getvRight() {
         return vRight;
     }
 
+    /**
+     * Returns the width of the view plane.
+     *
+     * @return The width of the view plane
+     */
     public double getWidth() {
         return width;
     }
 
+    /**
+     * Returns the height of the view plane.
+     *
+     * @return The height of the view plane
+     */
     public double getHeight() {
         return height;
     }
 
+    /**
+     * Returns the distance of the view plane from the camera.
+     *
+     * @return The distance of the view plane from the camera
+     */
     public double getDistance() {
         return distance;
     }
