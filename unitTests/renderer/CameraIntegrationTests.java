@@ -67,16 +67,16 @@ public class CameraIntegrationTests {
      */
     @Test
     public void PlaneIntegration() {
-        Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, 1), new Vector(0, -1, 0)).setVPDistance(1).setVPSize(3,
+        Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, -1, 0)).setVPDistance(1).setVPSize(3,
                 3);
         // Tc01: 9 intersection points - plane against camera
-        intersectionCount(new Plane(new Point(0, 0, 5), new Vector(0, 0, 1)), camera, 9, "TC01");
+        intersectionCount(new Plane(new Point(0, 0, -5), new Vector(0, 0, 1)), camera, 9, "TC01");
 
         // TC02: 9 intersection points - plane with small angle
-        intersectionCount(new Plane(new Point(0, 0, 5), new Vector(0, -1, 2)), camera, 9, "TC02");
+        intersectionCount( new Plane(new Point(0, 0, -5), new Vector(0, 1, 2)), camera, 9, "TC02");
 
         // TC03: 6 intersection points - plane parallel to lower rays
-        intersectionCount(new Plane(new Point(0, 0, 5), new Vector(0, -1, 1)), camera, 6, "TC03");
+        intersectionCount( new Plane(new Point(0, 0, -5), new Vector(0, 1, 1)), camera, 6, "TC03");
 
     }
 
