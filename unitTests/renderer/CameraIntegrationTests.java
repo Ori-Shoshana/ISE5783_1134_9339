@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CameraIntegrationTests {
     static final Point ZERO_POINT = new Point(0, 0, 0);
 
-    public void intersectionCount(Geometry geometry, Camera camera, int expected, String testName) {
+    public int intersectionCount(Geometry geometry, Camera camera) {
         int intersections = 0;
         for (int i = 0; i < 3; ++i) {
             for (int y = 0; y < 3; ++y) {
@@ -27,7 +27,7 @@ public class CameraIntegrationTests {
                 }
             }
         }
-        assertEquals( expected , intersections , "ERROR" + testName + ": Wrong amount of intersections");
+        return intersections;
     }
 
     /**
@@ -43,19 +43,19 @@ public class CameraIntegrationTests {
                 .setVPSize(3, 3);
 
         // TC01: 2 intersection points
-        intersectionCount(new Sphere(1, new Point(0, 0, -3)), camera, 2, "TC01");
+        assertEquals(2,intersectionCount(new Sphere(1, new Point(0, 0, -3)), camera),"ERROR : Wrong amount of intersections" );
 
         // TC02: 18 intersection points
-        intersectionCount(new Sphere(2.5, new Point(0, 0, -2.5)), camera2, 18, "TC02");
+        assertEquals(18,intersectionCount(new Sphere(2.5, new Point(0, 0, -2.5)), camera2), "ERROR : Wrong amount of intersections");
 
         // TC03: 10 intersection points
-        intersectionCount(new Sphere(2, new Point(0, 0, -2)), camera2, 10, "TC03");
+        assertEquals(10,intersectionCount(new Sphere(2, new Point(0, 0, -2)), camera2) , "ERROR : Wrong amount of intersections");
 
         // TC04: 9 intersection points
-        intersectionCount(new Sphere(4, new Point(0, 0, -1)), camera2, 9, "TC04");
+        assertEquals(9,intersectionCount(new Sphere(4, new Point(0, 0, -1)), camera2), "ERROR : Wrong amount of intersections");
 
         // TC05: 0 intersection points
-        intersectionCount(new Sphere(0.5, new Point(0, 0, 1)), camera, 0, "TC05");
+        assertEquals(0,intersectionCount(new Sphere(0.5, new Point(0, 0, 1)), camera), "ERROR : Wrong amount of intersections");
 
     }
 
@@ -70,13 +70,13 @@ public class CameraIntegrationTests {
         Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, -1, 0)).setVPDistance(1).setVPSize(3,
                 3);
         // Tc01: 9 intersection points - plane against camera
-        intersectionCount(new Plane(new Point(0, 0, -5), new Vector(0, 0, 1)), camera, 9, "TC01");
+        assertEquals(9,intersectionCount(new Plane(new Point(0, 0, -1), new Vector(0, 0, 2)), camera), "ERROR : Wrong amount of intersections");
 
         // TC02: 9 intersection points - plane with small angle
-        intersectionCount( new Plane(new Point(0, 0, -5), new Vector(0, 1, 2)), camera, 9, "TC02");
+        assertEquals(9,intersectionCount(new Plane(new Point(0, 0, -1), new Vector(0, 2, 4)), camera), "ERROR : Wrong amount of intersections");
 
         // TC03: 6 intersection points - plane parallel to lower rays
-        intersectionCount( new Plane(new Point(0, 0, -5), new Vector(0, 1, 1)), camera, 6, "TC03");
+        assertEquals(6,intersectionCount(new Plane(new Point(0, 0, -1), new Vector(0, 2, 2)), camera), "ERROR : Wrong amount of intersections");
 
     }
 
@@ -89,12 +89,12 @@ public class CameraIntegrationTests {
         Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, -1, 0)).setVPDistance(1).setVPSize(3,
                 3);
         // TC01: 1 intersection point - small triangle
-        intersectionCount(new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), camera, 1,
-                "TC01");
+        assertEquals(1,intersectionCount(new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), camera),
+                "ERROR : Wrong amount of intersections");
 
         // TC02: 2 intersection points - medium triangle
-        intersectionCount(new Triangle(new Point(1, -1, -2), new Point(-1, -1, -2), new Point(0, 20, -2)), camera, 2,
-                "TC02");
+        assertEquals(2,intersectionCount(new Triangle(new Point(1, -1, -2), new Point(-1, -1, -2), new Point(0, 20, -2)), camera),
+                "ERROR : Wrong amount of intersections");
 
     }
 }
