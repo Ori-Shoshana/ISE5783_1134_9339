@@ -1,7 +1,7 @@
 package primitives;
 
 import java.util.List;
-import java.util.Objects;
+import geometries.Intersectable.GeoPoint;
 
 /**
  * The Ray class represents a ray in 3D space, defined by a starting point and a direction.
@@ -81,7 +81,23 @@ public class Ray {
 
         return closestPoint;
     }
-
+    /**
+     * Finds the point in the given list that is closest to the starting point of the ray.
+     *
+     * @param geoPoints the list of points to search for the closest point
+     * @return the point in the list that is closest to the reference point, or null if the input list is empty
+     */
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
+        GeoPoint closestPoint = geoPoints.get(0);
+        double distance = closestPoint.point.distance(p0);
+        for (GeoPoint geoPoint : geoPoints) {
+            if (geoPoint.point.distance(p0) < distance) {
+                closestPoint = geoPoint;
+                distance = geoPoint.point.distance(p0);
+            }
+        }
+        return closestPoint;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

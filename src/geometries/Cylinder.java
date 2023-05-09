@@ -80,6 +80,7 @@ public class Cylinder extends Tube {
      * @param ray The Ray to intersect with the Cylinder.
      * @return A list of Point objects representing the intersection points between the Cylinder and the Ray.
      */
+    @Override
     public List<Point> findIntersections(Ray ray) {
         return null;
     }

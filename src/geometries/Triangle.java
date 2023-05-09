@@ -27,12 +27,13 @@ public class Triangle extends Polygon {
      @return a list of intersection points between the triangle and the given ray, or {@code null} if there are no
      intersections.
      */
-    public List<Point> findIntersections(Ray ray) {
+    @Override
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
 
-        List<Point> point = plane.findIntersections(ray);
+        List<GeoPoint> point = plane.findGeoIntersectionsHelper(ray);
         Vector v1 = vertices.get(0).subtract(p0);
         Vector v2 = vertices.get(1).subtract(p0);
         Vector v3 = vertices.get(2).subtract(p0);
