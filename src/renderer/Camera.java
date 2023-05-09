@@ -34,9 +34,13 @@ public class Camera {
             throw new IllegalArgumentException("The vectors are not orthogonal");
         }
         this.p0 = p0;
+
         this.vUp = vUp.normalize();
         this.vTo = vTo.normalize();
-        this.vRight = vTo.crossProduct(vUp).normalize();
+        /**
+        * If two vectors are normalized (i.e., their magnitudes are equal to 1), then their dot product will result in a vector whose magnitude is between 0 and 1. Taking the absolute value of this vector will result in a normalized vector.
+         */
+        this.vRight = vTo.crossProduct(vUp);
     }
 
     /**
@@ -81,8 +85,11 @@ public class Camera {
          double xJ = alignZero((j - (nX - 1) / 2d) * Rx);
 
          Point PIJ = pc;
-         if (!isZero(xJ)) PIJ = PIJ.add(vRight.scale(xJ));
-         if (!isZero(yJ)) PIJ = PIJ.add(vUp.scale(yJ));
+
+         if (!isZero(xJ))
+             PIJ = PIJ.add(vRight.scale(xJ));
+         if (!isZero(yJ))
+             PIJ = PIJ.add(vUp.scale(yJ));
 
          return new Ray(p0, PIJ.subtract(p0));
     }
@@ -101,7 +108,7 @@ public class Camera {
      *
      * @return The up direction of the camera
      */
-    public Vector getvUp() {
+    public Vector getVUp() {
         return vUp;
     }
 
@@ -110,7 +117,7 @@ public class Camera {
      *
      * @return The direction the camera is facing
      */
-    public Vector getvTo() {
+    public Vector getVTo() {
         return vTo;
     }
 
@@ -119,7 +126,7 @@ public class Camera {
      *
      * @return The right direction of the camera
      */
-    public Vector getvRight() {
+    public Vector getVRight() {
         return vRight;
     }
 
@@ -146,7 +153,7 @@ public class Camera {
      *
      * @return The distance of the view plane from the camera
      */
-    public double getDistance() {
+    public double getVPDistance() {
         return distance;
     }
 
