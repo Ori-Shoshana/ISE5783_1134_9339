@@ -33,7 +33,7 @@ public class Triangle extends Polygon {
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
 
-        List<GeoPoint> point = plane.findGeoIntersectionsHelper(ray);
+        List<Point> point = this.plane.findIntersections(ray);
         Vector v1 = vertices.get(0).subtract(p0);
         Vector v2 = vertices.get(1).subtract(p0);
         Vector v3 = vertices.get(2).subtract(p0);
@@ -48,7 +48,7 @@ public class Triangle extends Polygon {
 
 
         if ((t1>0 && t2>0 && t3>0) || (t1<0 && t2<0 && t3<0))
-            return point;
+            return List.of(new GeoPoint(this,point.get(0)));
 
         return null;
     }
