@@ -3,6 +3,7 @@ package primitives;
 import java.util.List;
 import geometries.Intersectable.GeoPoint;
 
+
 /**
  * The Ray class represents a ray in 3D space, defined by a starting point and a direction.
  *
@@ -18,6 +19,8 @@ public class Ray {
      */
     final private Vector dir;
 
+    private static final double DELTA = 0.1;
+
     /**
      * Constructs a new Ray with the given starting point and direction.
      *
@@ -29,6 +32,17 @@ public class Ray {
         this.dir = dir.normalize();
     }
 
+    /**
+     * Constructor that moves the ray by DELTA
+     * @param p0 point
+     * @param direction direction (must be normalized)
+     * @param normal normal
+     */
+    public Ray(Point p0, Vector direction, Vector normal) {
+        Vector delta = normal.scale(normal.dotProduct(direction) > 0 ? DELTA : -DELTA);
+        this.p0 = p0.add(delta);
+        this.dir = direction;
+    }
     /**
      * Returns the starting point of the ray.
      *
@@ -88,15 +102,21 @@ public class Ray {
      * @return the point in the list that is closest to the reference point, or null if the input list is empty
      */
     public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
-        GeoPoint closestPoint = geoPoints.get(0);
-        double distance = closestPoint.point.distance(p0);
-        for (GeoPoint geoPoint : geoPoints) {
-            if (geoPoint.point.distance(p0) < distance) {
-                closestPoint = geoPoint;
-                distance = geoPoint.point.distance(p0);
+
+        if(geoPoints==null){
+            return null;
+        }
+        double closetDistance=Double.POSITIVE_INFINITY;
+        GeoPoint closetPoint=null;
+        double distacne;
+        for (GeoPoint i:geoPoints){
+            distacne=i.point.distanceSquared(this.p0);
+            if(distacne<closetDistance){
+                closetPoint=i;
+                closetDistance=distacne;
             }
         }
-        return closestPoint;
+        return closetPoint;
     }
     @Override
     public boolean equals(Object o) {
