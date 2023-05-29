@@ -104,10 +104,11 @@ public class Polygon extends Geometry {
      * Finds the intersection points between a ray and the polygon.
      *
      * @param ray the ray to check for intersection with the polygon
+     * @param maxDistance the maximum distance between the point to the start of the ray
      * @return a list of intersection points between the ray and the polygon
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
         // Get the starting point of the ray
         Point p0 = ray.getP0();
 
@@ -131,7 +132,7 @@ public class Polygon extends Geometry {
         }
 
         // If the ray intersects the polygon's plane, return the intersection points
-        return plane.findGeoIntersectionsHelper(ray);
+        return plane.findGeoIntersectionsHelper(ray,maxDistance);
     }
 
 }

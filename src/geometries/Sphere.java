@@ -70,14 +70,22 @@ public class Sphere extends RadialGeometry {
      * Finds the intersections of a given {@link Ray} with the sphere.
      *
      * @param ray The {@link Ray} object used to find the intersection.
+     * @param maxDistance the maximum distance between the point to the start of the ray
      * @return A list of {@link Point} objects representing the intersection points, or null if no intersection is found.
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
 
         // Get the starting point of the ray and its direction vector.
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
+
+        if(p0.equals(center)){
+            if(alignZero(this.radius - maxDistance) > 0)
+                return null;
+            return List.of(new GeoPoint(this, center.add(v.scale(radius))));
+            //throw new IllegalArgumentException("p of Ray is the center of the sphere");
+        }
 
         // Initialize some variables.
         Vector u;
@@ -107,8 +115,8 @@ public class Sphere extends RadialGeometry {
         double th = Math.sqrt(rsquare - dsquare);
 
         // Check if the ray intersects the sphere at two points.
-        if (alignZero(tm + th) > 0) {
-            if (alignZero(tm - th) > 0) {
+        if (alignZero(tm + th) > 0 && alignZero(tm+th-maxDistance)<=0) {
+            if (alignZero(tm - th) > 0 && alignZero(tm-th-maxDistance)<=0) {
                 // Return a list of two intersection points.
                 return List.of( new GeoPoint (this, ray.getPoint(tm + th)), new GeoPoint (this, ray.getPoint(tm - th)));
             }
@@ -117,7 +125,7 @@ public class Sphere extends RadialGeometry {
         }
 
         // Check if the ray intersects the sphere at one point.
-        if (alignZero(tm - th) > 0) {
+        if (alignZero(tm - th) > 0 && alignZero(tm-th-maxDistance)<=0) {
             // Return a list of one intersection point.
             return List.of(new GeoPoint (this, ray.getPoint(tm - th)));
         }

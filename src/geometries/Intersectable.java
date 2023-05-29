@@ -5,7 +5,6 @@ import primitives.Point;
 import primitives.Ray;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * The abstract base class for all intersectable geometry objects in 3D space.
@@ -69,9 +68,34 @@ public abstract class Intersectable {
         var geoList = this.findGeoIntersections(ray);
         return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
     }
-    public List<GeoPoint> findGeoIntersections(Ray ray){
-        return findGeoIntersectionsHelper(ray);
-    }
-    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
 
+    /**
+     * find all intersection points {@link Point}
+     * that intersect with a specific ray{@link Ray}
+     * @param ray ray pointing towards the graphic object
+     * @return immutable list of intersection geo points {@link GeoPoint}
+     */
+    public final List<GeoPoint> findGeoIntersections(Ray ray) {
+        return findGeoIntersections(ray, Double.POSITIVE_INFINITY);
+    }
+
+    /**
+     * find all intersection points {@link Point}
+     * that intersect with a specific ray{@link Ray} in a range of distance
+     * @param ray ray pointing towards the graphic object
+     * @param maxDistance the maximum distance between the point to the start of the ray
+     * @return immutable list of intersection geo points {@link GeoPoint}
+     */
+    public final List<GeoPoint> findGeoIntersections(Ray ray, double maxDistance) {
+        return findGeoIntersectionsHelper(ray, maxDistance);
+    }
+
+    /**
+     * helper of findGeoIntersections
+     * @param ray ray pointing towards the graphic object
+     * @param maxDistance the maximum distance between the point to the start of the ray
+     * @return immutable list of intersection geo points {@link GeoPoint}
+     */
+    protected abstract List<GeoPoint>
+    findGeoIntersectionsHelper(Ray ray, double maxDistance);
 }

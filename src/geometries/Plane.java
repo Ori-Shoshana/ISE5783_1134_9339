@@ -96,10 +96,11 @@ public class Plane extends Geometry {
      * Finds the intersections of a given {@link Ray} with the plane.
      *
      * @param ray The {@link Ray} object used to find the intersection.
+     * @param maxDistance The maximum distance from the source of the ray to intersect with.
      * @return A list of {@link Point} objects representing the intersection points, or null if no intersection is found.
      */
         @Override
-        public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
 
             Point p0 = ray.getP0();
             Vector v = ray.getDir();
@@ -129,7 +130,7 @@ public class Plane extends Geometry {
 
             double t = alignZero(np0q0 / nv);
 
-            if(t <= 0){
+            if(t < 0 || alignZero(t - maxDistance) > 0){
                 return null;
             }
 

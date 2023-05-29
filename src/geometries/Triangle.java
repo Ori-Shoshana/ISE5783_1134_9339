@@ -22,18 +22,22 @@ public class Triangle extends Polygon {
         super(point1, point2, point3);
     }
     /**
-     Returns a list of intersection points between the triangle and a given ray.
-     @param ray the ray to find intersection points with.
-     @return a list of intersection points between the triangle and the given ray, or {@code null} if there are no
-     intersections.
+     *Returns a list of intersection points between the triangle and a given ray.
+     *@param ray the ray to find intersection points with.
+     * @param maxDistance the maximum distance between the point to the start of the ray
+     *@return a list of intersection points between the triangle and the given ray, or {@code null} if there are no
+     *intersections.
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
 
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
 
-        List<Point> point = this.plane.findIntersections(ray);
+        List<GeoPoint> points = plane.findGeoIntersections(ray, maxDistance);
+        if (points == null){
+            return null;
+        }
         Vector v1 = vertices.get(0).subtract(p0);
         Vector v2 = vertices.get(1).subtract(p0);
         Vector v3 = vertices.get(2).subtract(p0);
@@ -48,7 +52,7 @@ public class Triangle extends Polygon {
 
 
         if ((t1>0 && t2>0 && t3>0) || (t1<0 && t2<0 && t3<0))
-            return List.of(new GeoPoint(this,point.get(0)));
+            return List.of(new GeoPoint(this,points.get(0).point));
 
         return null;
     }

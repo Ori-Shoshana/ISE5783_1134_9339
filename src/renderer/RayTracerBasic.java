@@ -6,7 +6,6 @@ import lighting.LightSource;
 import geometries.Intersectable.GeoPoint;
 import scene.Scene;
 import static primitives.Util.alignZero;
-
 import java.util.List;
 
 /**
@@ -16,6 +15,8 @@ import java.util.List;
  */
 public class RayTracerBasic extends RayTracerBase {
 
+    private static final double DELTA = 0.1;////////////////////
+
     /**
      * Constructs a new RayTracerBasic object with a given scene.
      *
@@ -24,6 +25,44 @@ public class RayTracerBasic extends RayTracerBase {
     public RayTracerBasic(Scene scene) {
         super(scene);
     }
+
+
+
+    /**
+
+     Checks if a given point is unshaded by a light source.
+
+     @param gp The geometric point to be checked for shading.
+
+     @param light The light source illuminating the scene.
+
+     @param l The direction vector from the point to the light source.
+
+     @param n The normal vector at the point.
+
+     @param nl The dot product between the normal vector and the direction vector.
+
+     @return {@code true} if the point is unshaded, {@code false} otherwise.
+     */
+    private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
+        Vector lightDirection = l.scale(-1); // from point to light source
+        Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
+        Point point = gp.point.add(epsVector);
+        Ray lightRay = new Ray(point, lightDirection);
+
+        double maxDistance = light.getDistance(point);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, maxDistance);
+
+        return intersections == null;
+
+        /*for (GeoPoint intersection : intersections)
+            if(intersection.point.distance(lightRay.getP0()) < light.getDistance(intersection.point))
+            return false;*/
+        /* if there are points in the intersections list that are closer to the point
+        than light source – return false
+        otherwise – return true*/
+    }
+
 
     /**
      * Calculates the color of the intersection point of a given ray with the scene
@@ -77,9 +116,11 @@ public class RayTracerBasic extends RayTracerBase {
             Vector l = lightSource.getL(point);
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) {
-                Color iL = lightSource.getIntensity(point);
-                color = color.add(iL.scale(calcDiffusive(material, nl)),
-                        iL.scale(calcSpecular(material, n, l, nl, v)));
+                if(unshaded(geoPoint ,lightSource ,l ,n,nl)) {//////////////////////////////////////////////
+                    Color iL = lightSource.getIntensity(point);
+                    color = color.add(iL.scale(calcDiffusive(material, nl)),
+                            iL.scale(calcSpecular(material, n, l, nl, v)));
+                }
             }
         }
         return color;

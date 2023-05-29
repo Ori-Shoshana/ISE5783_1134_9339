@@ -86,10 +86,11 @@ public class Tube extends RadialGeometry {
      * Finds the intersections of the given ray with the tube.
      *
      * @param ray the ray to find intersections with.
+     * @param maxDistance the maximum distance between the point to the start of the ray
      * @return a list of points representing the intersection points, or null if there are no intersections.
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
         return null;
     }
 }

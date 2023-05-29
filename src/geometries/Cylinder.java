@@ -78,10 +78,11 @@ public class Cylinder extends Tube {
      * Calculates and returns a list of intersection points between the Cylinder and a given Ray.
      *
      * @param ray The Ray to intersect with the Cylinder.
+     * @param maxDistance the maximum distance between the point to the start of the ray
      * @return A list of Point objects representing the intersection points between the Cylinder and the Ray.
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
         return null;
     }
 }
