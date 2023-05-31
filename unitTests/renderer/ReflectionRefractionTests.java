@@ -28,7 +28,7 @@ public class ReflectionRefractionTests {
 
         scene.geometries.add( //
                 new Sphere(50d,new Point(0, 0, -50)).setEmission(new Color(BLUE)) //
-                        .setMaterial(new Material().setkD(0.4).setkS(0.3).setnShininess(100).setkD(0.3)),
+                        .setMaterial(new Material().setkD(0.4).setkS(0.3).setnShininess(100).setkT(0.3)),
                 new Sphere(25d,new Point(0, 0, -50)).setEmission(new Color(RED)) //
                         .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100)));
         scene.lights.add( //

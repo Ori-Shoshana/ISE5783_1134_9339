@@ -41,7 +41,7 @@ public class Ray {
     public Ray(Point p0, Vector direction, Vector normal) {
         Vector delta = normal.scale(normal.dotProduct(direction) > 0 ? DELTA : -DELTA);
         this.p0 = p0.add(delta);
-        this.dir = direction;
+        this.dir = direction.normalize();
     }
     /**
      * Returns the starting point of the ray.
@@ -68,6 +68,7 @@ public class Ray {
      * @return the point at the given parameter value t along the ray.
      */
     public Point getPoint(double t) {
+
         return p0.add(dir.scale(t));
     }
 
@@ -132,4 +133,5 @@ public class Ray {
                 ", dir=" + dir +
                 '}';
     }
+
 }
