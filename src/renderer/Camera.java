@@ -5,12 +5,16 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.MissingResourceException;
+import java.util.Random;
 
 import static primitives.Util.*;
 
 /**
  * A class that represents a camera.
+ *
  * @author ori and amir
  */
 public class Camera {
@@ -74,11 +78,13 @@ public class Camera {
 
         return new Ray(p0, PIJ.subtract(p0));
     }
+
     /**
-     Renders the image using the current image writer and ray tracer.
-     The ray tracer find the color and the image writer colors the pixels
-     @return This camera instance.
-     @throws UnsupportedOperationException If either the image writer or the ray tracer is not initialized.
+     * Renders the image using the current image writer and ray tracer.
+     * The ray tracer find the color and the image writer colors the pixels
+     *
+     * @return This camera instance.
+     * @throws UnsupportedOperationException If either the image writer or the ray tracer is not initialized.
      */
     public Camera renderImage() {
         try {
@@ -96,17 +102,18 @@ public class Camera {
                     castRay(nX, nY, i, j);
                 }
             }
-        }
-        catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {
             throw new UnsupportedOperationException();
         }
         return this;
     }
+
     /**
-     Prints a grid of lines without running over the original image.
-     @param interval The interval between the lines.
-     @param color The color of the lines.
-     @throws MissingResourceException If the image writer is not initialized.
+     * Prints a grid of lines without running over the original image.
+     *
+     * @param interval The interval between the lines.
+     * @param color    The color of the lines.
+     * @throws MissingResourceException If the image writer is not initialized.
      */
     public void printGrid(int interval, Color color) throws MissingResourceException {
         if (this.imageWriter == null) // the image writer is uninitialized
@@ -118,24 +125,96 @@ public class Camera {
     }
 
     /**
-
-     Casts a ray from the camera's location through the given pixel (in order to color a pixel)
-     Computes the color of the ray using the RayTracerBase object and writes it to the corresponding pixel in the ImageWriter object.
-     @param nX The number of pixels in the x-direction of the view plane.
-     @param nY The number of pixels in the y-direction of the view plane.
-     @param xIndex The index of the pixel in the x-direction.
-     @param yIndex The index of the pixel in the y-direction.
+     * Casts a ray from the camera's location through the given pixel (in order to color a pixel)
+     * Computes the color of the ray using the RayTracerBase object and writes it to the corresponding pixel in the ImageWriter object.
+     *
+     * @param nX     The number of pixels in the x-direction of the view plane.
+     * @param nY     The number of pixels in the y-direction of the view plane.
+     * @param xIndex The index of the pixel in the x-direction.
+     * @param yIndex The index of the pixel in the y-direction.
      */
     private void castRay(int nX, int nY, int xIndex, int yIndex) {
         Ray ray = constructRay(nX, nY, xIndex, yIndex);
         Color pixelColor = rayTracer.traceRay(ray);
         imageWriter.writePixel(xIndex, yIndex, pixelColor);
     }
-    /**
 
-     Writes the image to the image file using the ImageWriter object.
-     Throws a MissingResourceException if the ImageWriter object is null.
-     @throws MissingResourceException If the ImageWriter object is null.
+    /**
+     * Constructs a list of rays for a given image pixel.
+     *
+     * @param nX The number of pixels in the X direction.
+     * @param nY The number of pixels in the Y direction.
+     * @param j  The X index of the pixel.
+     * @param i  The Y index of the pixel.
+     * @return The list of constructed rays.
+     */
+    public List<Ray> constructRays(int nX, int nY, int j, int i) {
+        Random random = new Random();
+        List<Ray> rays = new LinkedList<>();
+        int rayNum = 100;
+
+        Point imageCenter = p0.add(vTo.scale(distance));
+
+        double pixelSizeX = width / nX;
+        double pixelSizeY = height / nY;
+
+        double Xj = (j - (double) (nX - 1) / 2) * pixelSizeX;
+        double Yi = -(i - (double) (nY - 1) / 2) * pixelSizeY;
+
+        Point Pij = imageCenter;
+        if (alignZero(Xj) != 0) {
+            Pij = Pij.add(vRight.scale(Xj));
+        }
+        if (alignZero(Yi) != 0) {
+            Pij = Pij.add(vUp.scale(Yi));
+        }
+
+        Vector Vij = Pij.subtract(p0);
+        Ray initialRay = new Ray(p0, Vij);
+        rays.add(initialRay);
+
+        for (int k = 0; k < rayNum; k++) {
+            double xJitt = random.nextDouble() * pixelSizeX - pixelSizeX / 2;
+            double yJitt = random.nextDouble() * pixelSizeY - pixelSizeY / 2;
+
+            rays.add(calcRay(Pij.movePointOnViewPlane(vUp, vRight, xJitt, yJitt, pixelSizeX, pixelSizeY)));
+        }
+
+        return rays;
+    }
+
+    /**
+     * Calculates the sum of colors for a list of rays.
+     *
+     * @param rays The list of rays.
+     * @return The sum of colors.
+     */
+    private Color calcColorSum(List<Ray> rays) {
+        Color colorSum = new Color(0, 0, 0);
+        for (Ray ray : rays) {
+            Color calcColor = castRay(ray);
+            colorSum = colorSum.add(calcColor);
+        }
+        colorSum = colorSum.reduce(rays.size());
+        return colorSum;
+    }
+
+    /**
+     * Calculates a ray given a point.
+     *
+     * @param point The point to calculate the ray from.
+     * @return The calculated ray.
+     */
+    public Ray calcRay(Point point) {
+        Vector newVector = point.subtract(p0);
+        return new Ray(p0, newVector);
+    }
+
+    /**
+     * Writes the image to the image file using the ImageWriter object.
+     * Throws a MissingResourceException if the ImageWriter object is null.
+     *
+     * @throws MissingResourceException If the ImageWriter object is null.
      */
     public void writeToImage() {
         if (this.imageWriter == null) // the image writer is uninitialized
@@ -166,23 +245,36 @@ public class Camera {
         this.distance = distance;
         return this;
     }
+
     /**
-     Sets the RayTracerBase object to be used for computing the color of a ray.
-     @param rayTracer The RayTracerBase object to be used.
-     @return The camera
+     * Sets the RayTracerBase object to be used for computing the color of a ray.
+     *
+     * @param rayTracer The RayTracerBase object to be used.
+     * @return The camera
      */
     public Camera setRayTracer(RayTracerBase rayTracer) {
         this.rayTracer = rayTracer;
         return this;
     }
+
     /**
      * Sets the image writer for this camera.
+     *
      * @param imageWriter the image writer to set
      * @return this camera, for method chaining
      */
     public Camera setImageWriter(ImageWriter imageWriter) {
         this.imageWriter = imageWriter;
         return this;
+    }
+    /**
+     * Casts a ray and retrieves the color from the ray tracer.
+     *
+     * @param ray The ray to cast.
+     * @return The color obtained from the ray tracer.
+     */
+    private Color castRay(Ray ray) {
+        return rayTracer.traceRay(ray);
     }
 
     /**
