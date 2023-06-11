@@ -11,7 +11,6 @@ import java.util.MissingResourceException;
 import java.util.Random;
 
 import static primitives.Util.*;
-
 /**
  * A class that represents a camera.
  *
@@ -26,10 +25,14 @@ public class Camera {
     private double width; // Width of the view plane
     private double height; // Height of the view plane
     private double distance; // Distance of the view plane from the camera
-
+    int rayNum = 1;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
 
+    public Camera setRaynum(int rayNum2){
+        rayNum=rayNum2;
+        return this;
+    }
     /**
      * Constructs a camera with the given location, forward direction, and upward direction.
      * The upward direction must be orthogonal to the forward direction.
@@ -53,33 +56,6 @@ public class Camera {
     }
 
     /**
-     * Constructs a ray that passes through the specified pixel on the view plane.
-     *
-     * @param nX The number of pixels in the X direction.
-     * @param nY The number of pixels in the Y direction.
-     * @param j  The index of the pixel in the X direction.
-     * @param i  The index of the pixel in the Y direction.
-     * @return The ray that passes through the specified pixel on the view plane.
-     */
-    public Ray constructRay(int nX, int nY, int j, int i) {
-        Point pc = p0.add(vTo.scale(distance));     // The point center of the view plane
-        double Ry = height / nY;                      //  The pixel height
-        double Rx = width / nX;                       //  The pixel width
-
-        double yJ = alignZero(-(i - (nY - 1) / 2d) * Ry);
-        double xJ = alignZero((j - (nX - 1) / 2d) * Rx);
-
-        Point PIJ = pc;
-
-        if (!isZero(xJ))
-            PIJ = PIJ.add(vRight.scale(xJ));
-        if (!isZero(yJ))
-            PIJ = PIJ.add(vUp.scale(yJ));
-
-        return new Ray(p0, PIJ.subtract(p0));
-    }
-
-    /**
      * Renders the image using the current image writer and ray tracer.
      * The ray tracer find the color and the image writer colors the pixels
      *
@@ -98,8 +74,7 @@ public class Camera {
             int nY = imageWriter.getNy();
             //rendering the image
             for (int i = 0; i < nY; i++) {
-                for (int j = 0; j < nX; j++) {
-                    castRay(nX, nY, i, j);
+                for (int j = 0; j < nX; j++) {imageWriter.writePixel(j,i,castRay(nX, nY, j, i));
                 }
             }
         } catch (MissingResourceException e) {
@@ -133,10 +108,42 @@ public class Camera {
      * @param xIndex The index of the pixel in the x-direction.
      * @param yIndex The index of the pixel in the y-direction.
      */
-    private void castRay(int nX, int nY, int xIndex, int yIndex) {
-        Ray ray = constructRay(nX, nY, xIndex, yIndex);
-        Color pixelColor = rayTracer.traceRay(ray);
-        imageWriter.writePixel(xIndex, yIndex, pixelColor);
+    private Color castRay(int nX, int nY, int xIndex, int yIndex) {
+        if (rayNum==1) {
+            Ray ray = constructRay(nX, nY, xIndex, yIndex);
+            return rayTracer.traceRay(ray);
+        }
+        else {
+            List<Ray> rays = constructRays( nX,  nY,  xIndex,  yIndex);
+            return (calcColorSum(rays));
+        }
+
+    }
+    /**
+     * Constructs a ray that passes through the specified pixel on the view plane.
+     *
+     * @param nX The number of pixels in the X direction.
+     * @param nY The number of pixels in the Y direction.
+     * @param j  The index of the pixel in the X direction.
+     * @param i  The index of the pixel in the Y direction.
+     * @return The ray that passes through the specified pixel on the view plane.
+     */
+    public Ray constructRay(int nX, int nY, int j, int i) {
+        Point pc = p0.add(vTo.scale(distance));     // The point center of the view plane
+        double Ry = height / nY;                      //  The pixel height
+        double Rx = width / nX;                       //  The pixel width
+
+        double yJ = alignZero(-(i - (nY - 1) / 2d) * Ry);
+        double xJ = alignZero((j - (nX - 1) / 2d) * Rx);
+
+        Point PIJ = pc;
+
+        if (!isZero(xJ))
+            PIJ = PIJ.add(vRight.scale(xJ));
+        if (!isZero(yJ))
+            PIJ = PIJ.add(vUp.scale(yJ));
+
+        return new Ray(p0, PIJ.subtract(p0));
     }
 
     /**
@@ -151,7 +158,7 @@ public class Camera {
     public List<Ray> constructRays(int nX, int nY, int j, int i) {
         Random random = new Random();
         List<Ray> rays = new LinkedList<>();
-        int rayNum = 100;
+
 
         Point imageCenter = p0.add(vTo.scale(distance));
 
@@ -163,7 +170,7 @@ public class Camera {
 
         Point Pij = imageCenter;
         if (alignZero(Xj) != 0) {
-            Pij = Pij.add(vRight.scale(Xj));
+             Pij = Pij.add(vRight.scale(Xj));
         }
         if (alignZero(Yi) != 0) {
             Pij = Pij.add(vUp.scale(Yi));
@@ -192,7 +199,7 @@ public class Camera {
     private Color calcColorSum(List<Ray> rays) {
         Color colorSum = new Color(0, 0, 0);
         for (Ray ray : rays) {
-            Color calcColor = castRay(ray);
+            Color calcColor = rayTracer.traceRay(ray);
             colorSum = colorSum.add(calcColor);
         }
         colorSum = colorSum.reduce(rays.size());
@@ -223,30 +230,6 @@ public class Camera {
     }
 
     /**
-     * Sets the size of the view plane.
-     *
-     * @param width  The width of the view plane.
-     * @param height The height of the view plane.
-     * @return This camera object.
-     */
-    public Camera setVPSize(double width, double height) {
-        this.width = width;
-        this.height = height;
-        return this;
-    }
-
-    /**
-     * Sets the distance of the view plane from the camera.
-     *
-     * @param distance The distance of the view plane from the camera.
-     * @return This camera object.
-     */
-    public Camera setVPDistance(double distance) {
-        this.distance = distance;
-        return this;
-    }
-
-    /**
      * Sets the RayTracerBase object to be used for computing the color of a ray.
      *
      * @param rayTracer The RayTracerBase object to be used.
@@ -267,15 +250,7 @@ public class Camera {
         this.imageWriter = imageWriter;
         return this;
     }
-    /**
-     * Casts a ray and retrieves the color from the ray tracer.
-     *
-     * @param ray The ray to cast.
-     * @return The color obtained from the ray tracer.
-     */
-    private Color castRay(Ray ray) {
-        return rayTracer.traceRay(ray);
-    }
+
 
     /**
      * Returns the location of the camera.
@@ -338,6 +313,29 @@ public class Camera {
      */
     public double getVPDistance() {
         return distance;
+    }
+    /**
+     * Sets the size of the view plane.
+     *
+     * @param width  The width of the view plane.
+     * @param height The height of the view plane.
+     * @return This camera object.
+     */
+    public Camera setVPSize(double width, double height) {
+        this.width = width;
+        this.height = height;
+        return this;
+    }
+
+    /**
+     * Sets the distance of the view plane from the camera.
+     *
+     * @param distance The distance of the view plane from the camera.
+     * @return This camera object.
+     */
+    public Camera setVPDistance(double distance) {
+        this.distance = distance;
+        return this;
     }
 
 }

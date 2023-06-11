@@ -131,7 +131,108 @@ public class level7 {
                 .renderImage()
                 .writeToImage();
     }
+    @Test
+    public void antianalising(){
+        Scene scene = new Scene("trying").setBackground(new Color(255, 192, 203));
 
 
+        Point a= new Point(100,100,0);
+        Point b= new Point(100,-100,0);
+        Point c= new Point(-100,-100,0);
+        Point d= new Point(-100,100,0);
+        Point sphere1= new Point(30,-50,40);
+        Point sphere2= new Point(30,50,40);
+        Point light1= new Point(200,-16,200);
+        Point light2= new Point(200,16,200);
+        Point camera10= new Point(600,0,200);
+        Camera camera100 = new Camera(camera10, new Vector(-6, 0, -1.5).normalize(), new Vector(-1.5, 0, 6).normalize())   //
+                .setVPSize(300, 300).setVPDistance(700)                                                                       //
+                .setRayTracer(new RayTracerBasic(scene));
+
+        scene.geometries.add( //
+                new Polygon(a,b,c,d)// flor
+                        .setEmission(new Color(BLACK))
+                        .setMaterial(new Material().setkS(0.5).setkD(0.5).setnShininess(60)), //
+
+
+                new Sphere(30d,sphere1) //
+                        .setEmission(new Color(BLUE)) //
+                        .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(30)), //
+                new Sphere(30d,sphere2) //
+                        .setEmission(new Color(BLUE)) //
+                        .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(30)));
+        scene.lights.add( //
+                new SpotLight(new Color(WHITE), light1, new Vector(-170, -20, -160)) //
+                        .setKl(4E-4).setKq(2E-5));
+        scene.lights.add(
+                new SpotLight(new Color(WHITE),light2, new Vector(-170, 20, -160)) //
+                        .setKl(4E-4).setKq(2E-5));
+        scene.lights.add( //
+                new SpotLight(new Color(WHITE), new Point(-180,-40,255), new Vector(156, -10, -215)) //
+                        .setKl(4E-4).setKq(2E-5));
+        scene.lights.add(
+                new SpotLight(new Color(WHITE),light2, new Vector(156, 10, -215)) //
+                        .setKl(4E-4).setKq(2E-5));
+
+        camera100.setImageWriter(new ImageWriter("antianalising", 600, 600)).setRaynum(100) //
+                .renderImage() //
+                .writeToImage();
+
+
+
+    }
+
+    @Test
+    public void notAntianalsing(){
+        Scene scene = new Scene("trying").setBackground(new Color(255, 192, 203));
+
+        //scene.setAmbientLight(new AmbientLight(new Color(lightGray), 0.15));
+
+
+        Point a= new Point(100,100,0);
+        Point b= new Point(100,-100,0);
+        Point c= new Point(-100,-100,0);
+        Point d= new Point(-100,100,0);
+        Point sphere1= new Point(30,-50,40);
+        Point sphere2= new Point(30,50,40);
+        Point light1= new Point(200,-16,200);
+        Point light2= new Point(200,16,200);
+        Point camera10= new Point(600,0,200);
+        Camera camera100 = new Camera(camera10, new Vector(-6, 0, -1.5).normalize(), new Vector(-1.5, 0, 6).normalize())   //
+                .setVPSize(300, 300).setVPDistance(700)                                                                       //
+                .setRayTracer(new RayTracerBasic(scene));
+
+        scene.geometries.add( //
+                new Polygon(a,b,c,d)// flor
+                        .setEmission(new Color(BLACK))
+                        .setMaterial(new Material().setkS(0.5).setkD(0.5).setnShininess(60)), //
+
+
+                new Sphere(30d,sphere1) //
+                        .setEmission(new Color(BLUE)) //
+                        .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(30)), //
+                new Sphere(30d,sphere2) //
+                        .setEmission(new Color(BLUE)) //
+                        .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(30)));
+        scene.lights.add( //
+                new SpotLight(new Color(WHITE), light1, new Vector(-170, -20, -160)) //
+                        .setKl(4E-4).setKq(2E-5));
+        scene.lights.add(
+                new SpotLight(new Color(WHITE),light2, new Vector(-170, 20, -160)) //
+                        .setKl(4E-4).setKq(2E-5));
+        scene.lights.add( //
+                new SpotLight(new Color(WHITE), new Point(-180,-40,255), new Vector(156, -10, -215)) //
+                        .setKl(4E-4).setKq(2E-5));
+        scene.lights.add(
+                new SpotLight(new Color(WHITE),light2, new Vector(156, 10, -215)) //
+                        .setKl(4E-4).setKq(2E-5));
+
+        camera100.setImageWriter(new ImageWriter("notAntianalsing", 600, 600)) //
+                .renderImage() //
+                .writeToImage();
+
+
+
+    }
 }
 
