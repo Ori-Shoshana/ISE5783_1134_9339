@@ -25,12 +25,12 @@ public class Camera {
     private double width; // Width of the view plane
     private double height; // Height of the view plane
     private double distance; // Distance of the view plane from the camera
-    int rayNum = 1;
+    int numOfRays = 1;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
 
-    public Camera setRaynum(int rayNum2){
-        rayNum=rayNum2;
+    public Camera setRaynum(int nRays){
+        numOfRays =nRays;
         return this;
     }
     /**
@@ -109,7 +109,7 @@ public class Camera {
      * @param yIndex The index of the pixel in the y-direction.
      */
     private Color castRay(int nX, int nY, int xIndex, int yIndex) {
-        if (rayNum==1) {
+        if (numOfRays ==1) {
             Ray ray = constructRay(nX, nY, xIndex, yIndex);
             return rayTracer.traceRay(ray);
         }
@@ -149,46 +149,58 @@ public class Camera {
     /**
      * Constructs a list of rays for a given image pixel.
      *
-     * @param nX The number of pixels in the X direction.
-     * @param nY The number of pixels in the Y direction.
-     * @param j  The X index of the pixel.
-     * @param i  The Y index of the pixel.
+     * @param nX     The number of pixels in the X direction.
+     * @param nY     The number of pixels in the Y direction.
+     * @param j      The X index of the pixel.
+     * @param i      The Y index of the pixel.
      * @return The list of constructed rays.
      */
     public List<Ray> constructRays(int nX, int nY, int j, int i) {
         Random random = new Random();
         List<Ray> rays = new LinkedList<>();
 
-
+        // Calculate the center point of the image on the view plane
         Point imageCenter = p0.add(vTo.scale(distance));
 
+        // Calculate the size of each pixel
         double pixelSizeX = width / nX;
         double pixelSizeY = height / nY;
 
+        // Calculate the coordinates of the current pixel relative to the image center
         double Xj = (j - (double) (nX - 1) / 2) * pixelSizeX;
         double Yi = -(i - (double) (nY - 1) / 2) * pixelSizeY;
 
+        // Calculate the point on the view plane corresponding to the current pixel
         Point Pij = imageCenter;
         if (alignZero(Xj) != 0) {
-             Pij = Pij.add(vRight.scale(Xj));
+            Pij = Pij.add(vRight.scale(Xj));
         }
         if (alignZero(Yi) != 0) {
             Pij = Pij.add(vUp.scale(Yi));
         }
 
+        // Calculate the vector from the camera's location to the point on the view plane
         Vector Vij = Pij.subtract(p0);
         Ray initialRay = new Ray(p0, Vij);
         rays.add(initialRay);
 
-        for (int k = 0; k < rayNum; k++) {
-            double xJitt = random.nextDouble() * pixelSizeX - pixelSizeX / 2;
-            double yJitt = random.nextDouble() * pixelSizeY - pixelSizeY / 2;
+        // Generate additional rays within the pixel
+        for (int k = 0; k < numOfRays; k++) {
+            // Generate random offsets within the pixel
+            double x = random.nextDouble() * pixelSizeX - pixelSizeX / 2;
+            double y = random.nextDouble() * pixelSizeY - pixelSizeY / 2;
 
-            rays.add(calcRay(Pij.movePointOnViewPlane(vUp, vRight, xJitt, yJitt, pixelSizeX, pixelSizeY)));
+            // Calculate the new point on the view plane with the random offsets
+            Point newPoint = Pij.movePointOnViewPlane(vUp, vRight, x, y, pixelSizeX, pixelSizeY);
+
+            // Calculate the ray from the camera's location to the new point
+            Ray newRay = calcRay(newPoint);
+            rays.add(newRay);
         }
 
         return rays;
     }
+
 
     /**
      * Calculates the sum of colors for a list of rays.
@@ -199,12 +211,15 @@ public class Camera {
     private Color calcColorSum(List<Ray> rays) {
         Color colorSum = new Color(0, 0, 0);
         for (Ray ray : rays) {
+            // Trace each ray and add its color to the sum
             Color calcColor = rayTracer.traceRay(ray);
             colorSum = colorSum.add(calcColor);
         }
+        // Reduce the sum of colors by dividing it by the number of rays
         colorSum = colorSum.reduce(rays.size());
         return colorSum;
     }
+
 
     /**
      * Calculates a ray given a point.
