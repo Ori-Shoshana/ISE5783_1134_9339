@@ -245,28 +245,21 @@ public class level7 {
                 new Triangle(A2,E2,D2).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(F2,E2,D2).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(A2,E2,C2).setMaterial(material).setEmission(new Color(255, 0, 0)),
-                //new Triangle(A,B,C).setMaterial(material).setEmission(new Color(0, 255, 220)),
-                //new Triangle(B,D,C).setMaterial(material).setEmission(new Color(42, 235, 0)),
                 new Triangle(A2,D2,C2).setMaterial(material).setEmission(new Color(120, 49, 0)),
                 new Triangle(F2,E2,C2).setMaterial(material).setEmission(new Color(42, 0, 100)),
                 new Triangle(F2,D2,C2).setMaterial(material).setEmission(new Color(0, 235, 0))
         );
 
         scene.geometries.add(
-                // new Triangle(A,B,D).setMaterial(material).setEmission(new Color(128, 0, 128)),
-              //  new Triangle(A3,E3,D3).setMaterial(material).setEmission(new Color(128, 0, 128)),
-             //   new Triangle(F3,E3,D3).setMaterial(material).setEmission(new Color(128, 0, 128)),
-                new Triangle(A3,E3,C3).setMaterial(material).setEmission(new Color(255, 0, 0)),
-                //new Triangle(A,B,C).setMaterial(material).setEmission(new Color(0, 255, 220)),
-                //new Triangle(B,D,C).setMaterial(material).setEmission(new Color(42, 235, 0)),
-                new Triangle(A3,D3,C3).setMaterial(material).setEmission(new Color(120, 49, 0)),
+                 new Triangle(A3,E3,C3).setMaterial(material).setEmission(new Color(255, 0, 0)),
+                 new Triangle(A3,D3,C3).setMaterial(material).setEmission(new Color(120, 49, 0)),
                 new Triangle(F3,E3,C3).setMaterial(material).setEmission(new Color(42, 0, 100)),
                 new Triangle(F3,D3,C3).setMaterial(material).setEmission(new Color(0, 235, 0))
         );
 
 
 
-        // Add a floor plane with reflection
+        // Add a floor plane with reflection and a mirror
         Material floorMaterial = new Material().setkD(0.2).setnShininess(50).setkT(0.65).setkR(0.8).setkS(0.4);
         scene.geometries.add(
                 new Plane(new Point(-1000, -1000, -height - 1), new Point(1000, -1000, -height - 1), new Point(0, 0, -height - 1))
@@ -283,12 +276,14 @@ public class level7 {
 
         );
 
+   //     scene.geometries.add(new Sphere(10,new Point(0,-350,-height-1)).setMaterial(material).setEmission(new Color(RED)));
         // Add point lights for illumination
         scene.lights.add(new PointLight(new Color(255, 255, 255), new Point(200, 50, -100)));
         scene.lights.add(new PointLight(new Color(255, 255, 255), new Point(-200, -200, 300)));
-        // scene.lights.add(new PointLight(new Color(255, 255, 255), new Point(0,200,599)));
-       // scene.lights.add(new SpotLight(new Color(green),new Point(0,0,0),new Vector(0,1,50)));
-        camera.setImageWriter(new ImageWriter("antianalisingAttractive_scene", 800, 800)).setAntiAliasing(10).setMultiThreading(4).setadaptive(true)
+        scene.lights.add(new SpotLight(new Color(green),new Point(0,-400,-height-1),new Vector(0,1,0.5)));
+        scene.lights.add(new DirectionalLight(new Color(255,255,204),new Vector(0,-1,0)));
+
+        camera.setImageWriter(new ImageWriter("antianalisingAttractive_scene", 800, 800)).setAntiAliasing(1).setMultiThreading(4).setadaptive(true)
                 .setRayTracer(new RayTracerBasic(scene))
                 .renderImage()
                 .writeToImage();
@@ -306,21 +301,18 @@ public class level7 {
         double height = Math.sqrt(3) * radius;
 
         Point A1 = new Point(-280,0,150);
-        Point B1 = new Point(-250,50,150);
         Point C1 = new Point(-350,200,400);
         Point D1 = new Point(-150,150,150);
         Point E1 = new Point(-500,150,150);
         Point F1 = new Point(-350,300,150);
 
         Point A2 = new Point(280,0,150);
-        Point B2 = new Point(250,50,150);
         Point C2 = new Point(300,200,400);
         Point D2 = new Point(150,150,150);
         Point E2 = new Point(500,150,150);
         Point F2 = new Point(340,300,150);
 
         Point A3 = new Point(0,0,350);
-        Point B3 = new Point(-50,50,350);
         Point C3 = new Point(0,200,600);
         Point D3 = new Point(-150,150,350);
         Point E3 = new Point(170,150,350);
@@ -328,9 +320,9 @@ public class level7 {
 
         // Add spheres with different colors and positions
         scene.geometries.add(
-                new Sphere(radius, new Point(0, 0, height * 2.3)).setMaterial(material).setEmission(new Color(255, 0, 0)),
-                new Sphere(radius, new Point(-radius, -height, height)).setMaterial(material).setEmission(new Color(0, 255, 0)),
-                new Sphere(radius, new Point(radius, -height, height)).setMaterial(material).setEmission(new Color(0, 0, 255)),
+                new Sphere(radius, new Point(0, 0, height * 2.3)).setMaterial(material).setEmission(new Color(red)),
+                new Sphere(radius, new Point(-radius, -height, height)).setMaterial(material).setEmission(new Color(green)),
+                new Sphere(radius, new Point(radius, -height, height)).setMaterial(material).setEmission(new Color(blue)),
                 new Sphere(radius, new Point(-radius * 2, -height * 2, -10)).setMaterial(material).setEmission(new Color(255, 255, 0)),
                 new Sphere(radius, new Point(0, -height * 2, -10)).setMaterial(material).setEmission(new Color(255, 0, 255)),
                 new Sphere(radius, new Point(radius * 2, -height * 2, -10)).setMaterial(material).setEmission(new Color(0, 255, 255)),
@@ -341,36 +333,25 @@ public class level7 {
         );
 
         scene.geometries.add(
-                // new Triangle(A,B,D).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(A1,E1,D1).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(F1,E1,D1).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(A1,E1,C1).setMaterial(material).setEmission(new Color(255, 0, 0)),
-                //new Triangle(A,B,C).setMaterial(material).setEmission(new Color(0, 255, 220)),
-                //new Triangle(B,D,C).setMaterial(material).setEmission(new Color(42, 235, 0)),
                 new Triangle(A1,D1,C1).setMaterial(material).setEmission(new Color(120, 49, 0)),
                 new Triangle(F1,E1,C1).setMaterial(material).setEmission(new Color(42, 0, 100)),
                 new Triangle(F1,D1,C1).setMaterial(material).setEmission(new Color(0, 235, 0))
         );
 
         scene.geometries.add(
-                // new Triangle(A,B,D).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(A2,E2,D2).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(F2,E2,D2).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(A2,E2,C2).setMaterial(material).setEmission(new Color(255, 0, 0)),
-                //new Triangle(A,B,C).setMaterial(material).setEmission(new Color(0, 255, 220)),
-                //new Triangle(B,D,C).setMaterial(material).setEmission(new Color(42, 235, 0)),
                 new Triangle(A2,D2,C2).setMaterial(material).setEmission(new Color(120, 49, 0)),
                 new Triangle(F2,E2,C2).setMaterial(material).setEmission(new Color(42, 0, 100)),
                 new Triangle(F2,D2,C2).setMaterial(material).setEmission(new Color(0, 235, 0))
         );
 
         scene.geometries.add(
-                // new Triangle(A,B,D).setMaterial(material).setEmission(new Color(128, 0, 128)),
-                //  new Triangle(A3,E3,D3).setMaterial(material).setEmission(new Color(128, 0, 128)),
-                //   new Triangle(F3,E3,D3).setMaterial(material).setEmission(new Color(128, 0, 128)),
                 new Triangle(A3,E3,C3).setMaterial(material).setEmission(new Color(255, 0, 0)),
-                //new Triangle(A,B,C).setMaterial(material).setEmission(new Color(0, 255, 220)),
-                //new Triangle(B,D,C).setMaterial(material).setEmission(new Color(42, 235, 0)),
                 new Triangle(A3,D3,C3).setMaterial(material).setEmission(new Color(120, 49, 0)),
                 new Triangle(F3,E3,C3).setMaterial(material).setEmission(new Color(42, 0, 100)),
                 new Triangle(F3,D3,C3).setMaterial(material).setEmission(new Color(0, 235, 0))
@@ -398,9 +379,7 @@ public class level7 {
         // Add point lights for illumination
         scene.lights.add(new PointLight(new Color(255, 255, 255), new Point(200, 50, -100)));
         scene.lights.add(new PointLight(new Color(255, 255, 255), new Point(-200, -200, 300)));
-        // scene.lights.add(new PointLight(new Color(255, 255, 255), new Point(0,200,599)));
-        // scene.lights.add(new SpotLight(new Color(green),new Point(0,0,0),new Vector(0,1,50)));
-        camera.setImageWriter(new ImageWriter("NotAntianalisingAttractive_scene", 800, 800))
+              camera.setImageWriter(new ImageWriter("NotAntianalisingAttractive_scene", 800, 800))
                 .setRayTracer(new RayTracerBasic(scene))
                 .renderImage()
                 .writeToImage();
