@@ -25,9 +25,11 @@ public class Camera {
     private double width; // Width of the view plane
     private double height; // Height of the view plane
     private double distance; // Distance of the view plane from the camera
-    int numOfRays = 1;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
+    private int numOfRays = 1;
+    private boolean adaptive = false;
+    private int numOfThreads = 1;
 
     public Camera setRaynum(int nRays){
         numOfRays =nRays;
