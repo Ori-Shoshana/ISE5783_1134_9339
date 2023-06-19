@@ -28,8 +28,8 @@ public class Camera {
     private boolean adaptive = false;
     private int numOfThreads = 1;
 
-    public Camera setRaynum(int nRays){
-        antiAliasing =nRays;
+    public Camera setAntiAliasing(int nRays){
+        antiAliasing = nRays;
         return this;
     }
     /**
@@ -62,23 +62,42 @@ public class Camera {
      * @throws UnsupportedOperationException If either the image writer or the ray tracer is not initialized.
      */
     public Camera renderImage() {
-        try {
-            if (imageWriter == null) {
-                throw new MissingResourceException("missing resources", "Camera", "imageWriter");
-            }
-            if (rayTracer == null) {
-                throw new MissingResourceException("missing resources", "Camera", "rayTracerBase");
-            }
-            int nX = imageWriter.getNx();
-            int nY = imageWriter.getNy();
-            //rendering the image
-            for (int i = 0; i < nY; i++) {
-                for (int j = 0; j < nX; j++) {imageWriter.writePixel(j,i,castRay(nX, nY, j, i));
-                }
-            }
-        } catch (MissingResourceException e) {
-            throw new UnsupportedOperationException();
+
+        if (p0 == null || vRight == null
+                || vUp == null || vTo == null || distance == 0
+                || width == 0 || height == 0 || centerPoint == null
+                || imageWriter == null || rayTracer == null) {
+            throw new MissingResourceException("Missing camera data", Camera.class.getName(), null);
         }
+
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
+
+
+        Pixel.initialize(nY, nX, 1);
+
+
+        if (!adaptive) {
+            while (numOfThreads-- > 0) {
+                new Thread(() -> {
+                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone())
+                        imageWriter.writePixel(pixel.col, pixel.row, rayTracer.TraceRays(constructRays(nX,
+                                nY, pixel.col, pixel.row)));
+                }).start();
+            }
+            Pixel.waitToFinish();
+        }
+        else {
+            while (numOfThreads-- > 0) {
+                new Thread(() -> {
+                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone())
+                        imageWriter.writePixel(pixel.col, pixel.row, SuperSampling(nX,
+                                nY, pixel.col, pixel.row, antiAliasing, false));
+                }).start();
+            }
+            Pixel.waitToFinish();
+        }
+
         return this;
     }
 
@@ -99,53 +118,6 @@ public class Camera {
     }
 
     /**
-     * Casts a ray from the camera's location through the given pixel (in order to color a pixel)
-     * Computes the color of the ray using the RayTracerBase object and writes it to the corresponding pixel in the ImageWriter object.
-     *
-     * @param nX     The number of pixels in the x-direction of the view plane.
-     * @param nY     The number of pixels in the y-direction of the view plane.
-     * @param xIndex The index of the pixel in the x-direction.
-     * @param yIndex The index of the pixel in the y-direction.
-     */
-    private Color castRay(int nX, int nY, int xIndex, int yIndex) {
-        if (antiAliasing ==1) {
-            List<Ray>  ray = constructRays(nX, nY, xIndex, yIndex);
-            return rayTracer.traceRay(ray.get(0));
-        }
-        else {
-            List<Ray> rays = constructRays( nX,  nY,  xIndex,  yIndex);
-            return (calcColorSum(rays));
-        }
-
-    }
-//    /**
-//     * Constructs a ray that passes through the specified pixel on the view plane.
-//     *
-//     * @param nX The number of pixels in the X direction.
-//     * @param nY The number of pixels in the Y direction.
-//     * @param j  The index of the pixel in the X direction.
-//     * @param i  The index of the pixel in the Y direction.
-//     * @return The ray that passes through the specified pixel on the view plane.
-//     */
-//    public Ray constructRay(int nX, int nY, int j, int i) {
-//        Point pc = p0.add(vTo.scale(distance));     // The point center of the view plane
-//        double Ry = height / nY;                      //  The pixel height
-//        double Rx = width / nX;                       //  The pixel width
-//
-//        double yJ = alignZero(-(i - (nY - 1) / 2d) * Ry);
-//        double xJ = alignZero((j - (nX - 1) / 2d) * Rx);
-//
-//        Point PIJ = pc;
-//
-//        if (!isZero(xJ))
-//            PIJ = PIJ.add(vRight.scale(xJ));
-//        if (!isZero(yJ))
-//            PIJ = PIJ.add(vUp.scale(yJ));
-//
-//        return new Ray(p0, PIJ.subtract(p0));
-//    }
-
-    /**
      * Constructs a list of rays for a given image pixel.
      *
      * @param nX     The number of pixels in the X direction.
@@ -154,52 +126,7 @@ public class Camera {
      * @param //yPixel      The Y index of the pixel.
      * @return The list of constructed rays.
      */
-//    public List<Ray> constructRays(int nX, int nY, int xPixel, int yPixel) {
-//        Random random = new Random();
-//        List<Ray> rays = new LinkedList<>();
-//
-//        // Calculate the center point of the image on the view plane
-//        Point imageCenter = p0.add(vTo.scale(distance));
-//
-//        // Calculate the size of each pixel
-//        double pixelSizeX = width / nX;
-//        double pixelSizeY = height / nY;
-//
-//        // Calculate the coordinates of the current pixel relative to the image center
-//        double Xj = (xPixel - (double) (nX - 1) / 2) * pixelSizeX;
-//        double Yi = -(yPixel - (double) (nY - 1) / 2) * pixelSizeY;
-//
-//        // Calculate the point on the view plane corresponding to the current pixel
-//        Point Pxy = imageCenter;
-//
-//        if (alignZero(Xj) != 0) {
-//            Pxy = Pxy.add(vRight.scale(Xj));
-//        }
-//        if (alignZero(Yi) != 0) {
-//            Pxy = Pxy.add(vUp.scale(Yi));
-//        }
-//
-//        // Calculate the vector from the camera's location to the point on the view plane
-//        Vector Vij = Pxy.subtract(p0);
-//        Ray initialRay = new Ray(p0, Vij);
-//        rays.add(initialRay);
-//
-//        // Generate additional rays within the pixel
-//        for (int k = 0; k < numOfRays; k++) {
-//            // Generate random offsets within the pixel
-//            double x = random.nextDouble() * pixelSizeX - pixelSizeX / 2;
-//            double y = random.nextDouble() * pixelSizeY - pixelSizeY / 2;
-//
-//            // Calculate the new point on the view plane with the random offsets
-//            Point newPoint = Pxy.movePointOnViewPlane(vUp, vRight, x, y, pixelSizeX, pixelSizeY);
-//
-//            // Calculate the ray from the camera's location to the new point
-//            Ray newRay = calcRay(newPoint);
-//            rays.add(newRay);
-//        }
-//
-//        return rays;
-//    }
+
     public List<Ray> constructRays(int nX, int nY, int j, int i) {
         List<Ray> rays = new LinkedList<>();
         Point centralPixel = getCenterOfPixel(nX, nY, j, i);
@@ -300,35 +227,6 @@ public class Camera {
         return new Ray(p0, vIJ);
     }
 
-    /**
-     * Calculates the sum of colors for a list of rays.
-     *
-     * @param rays The list of rays.
-     * @return The sum of colors.
-     */
-    private Color calcColorSum(List<Ray> rays) {
-        Color colorSum = new Color(0, 0, 0);
-        for (Ray ray : rays) {
-            // Trace each ray and add its color to the sum
-            Color calcColor = rayTracer.traceRay(ray);
-            colorSum = colorSum.add(calcColor);
-        }
-        // Reduce the sum of colors by dividing it by the number of rays
-        colorSum = colorSum.reduce(rays.size());
-        return colorSum;
-    }
-
-
-    /**
-     * Calculates a ray given a point.
-     *
-     * @param point The point to calculate the ray from.
-     * @return The calculated ray.
-     */
-    public Ray calcRay(Point point) {
-        Vector newVector = point.subtract(p0);
-        return new Ray(p0, newVector);
-    }
 
     /**
      * Writes the image to the image file using the ImageWriter object.
@@ -464,10 +362,12 @@ public class Camera {
     }
 
     /**
-     * get of centerPoint
-     * @return point
+     * set the threadsCount
+     * @return the Camera object
      */
-    public Point get_centerVPPoint() {
-        return centerPoint;
+    public Camera setMultiThreading(int threadsCount) {
+        this.numOfThreads = threadsCount;
+        return this;
+
     }
 }

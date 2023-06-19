@@ -22,10 +22,10 @@ public class ShadowTests {
 
     private Scene scene = new Scene("Test scene");
     private Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0))   //
-            .setVPSize(200, 200).setVPDistance(1000) .setRaynum(100)                                                                      //
+            .setVPSize(200, 200).setVPDistance(1000)                                                                      //
             .setRayTracer(new RayTracerBasic(scene));
     private Camera camera2 = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0))   //
-            .setVPSize(200, 200).setVPDistance(1000) .setRaynum(1)                                                                      //
+            .setVPSize(200, 200).setVPDistance(1000)                                                                    //
             .setRayTracer(new RayTracerBasic(scene));
 
     /**
