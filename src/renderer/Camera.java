@@ -153,11 +153,11 @@ public class Camera {
      *
      * @param nX     The number of pixels in the X direction.
      * @param nY     The number of pixels in the Y direction.
-     * @param j      The X index of the pixel.
-     * @param i      The Y index of the pixel.
+     * @param xPixel      The X index of the pixel.
+     * @param yPixel      The Y index of the pixel.
      * @return The list of constructed rays.
      */
-    public List<Ray> constructRays(int nX, int nY, int j, int i) {
+    public List<Ray> constructRays(int nX, int nY, int xPixel, int yPixel) {
         Random random = new Random();
         List<Ray> rays = new LinkedList<>();
 
@@ -169,20 +169,21 @@ public class Camera {
         double pixelSizeY = height / nY;
 
         // Calculate the coordinates of the current pixel relative to the image center
-        double Xj = (j - (double) (nX - 1) / 2) * pixelSizeX;
-        double Yi = -(i - (double) (nY - 1) / 2) * pixelSizeY;
+        double Xj = (xPixel - (double) (nX - 1) / 2) * pixelSizeX;
+        double Yi = -(yPixel - (double) (nY - 1) / 2) * pixelSizeY;
 
         // Calculate the point on the view plane corresponding to the current pixel
-        Point Pij = imageCenter;
+        Point Pxy = imageCenter;
+        
         if (alignZero(Xj) != 0) {
-            Pij = Pij.add(vRight.scale(Xj));
+            Pxy = Pxy.add(vRight.scale(Xj));
         }
         if (alignZero(Yi) != 0) {
-            Pij = Pij.add(vUp.scale(Yi));
+            Pxy = Pxy.add(vUp.scale(Yi));
         }
 
         // Calculate the vector from the camera's location to the point on the view plane
-        Vector Vij = Pij.subtract(p0);
+        Vector Vij = Pxy.subtract(p0);
         Ray initialRay = new Ray(p0, Vij);
         rays.add(initialRay);
 
@@ -193,7 +194,7 @@ public class Camera {
             double y = random.nextDouble() * pixelSizeY - pixelSizeY / 2;
 
             // Calculate the new point on the view plane with the random offsets
-            Point newPoint = Pij.movePointOnViewPlane(vUp, vRight, x, y, pixelSizeX, pixelSizeY);
+            Point newPoint = Pxy.movePointOnViewPlane(vUp, vRight, x, y, pixelSizeX, pixelSizeY);
 
             // Calculate the ray from the camera's location to the new point
             Ray newRay = calcRay(newPoint);
