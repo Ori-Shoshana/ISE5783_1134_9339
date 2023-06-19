@@ -62,42 +62,56 @@ public class Camera {
      * @throws UnsupportedOperationException If either the image writer or the ray tracer is not initialized.
      */
     public Camera renderImage() {
-
+        // Check if all required camera data is available
         if (p0 == null || vRight == null
                 || vUp == null || vTo == null || distance == 0
                 || width == 0 || height == 0 || centerPoint == null
                 || imageWriter == null || rayTracer == null) {
             throw new MissingResourceException("Missing camera data", Camera.class.getName(), null);
         }
-
+        // Get the number of pixels in X and Y directions from the image writer
         int nX = imageWriter.getNx();
         int nY = imageWriter.getNy();
-
-
+        // Initialize the Pixel class with the number of rows, columns, and total pixels
         Pixel.initialize(nY, nX, 1);
 
-
+        // Check if adaptive mode is enabled
         if (!adaptive) {
+            // Render the image using regular super-sampling (non-adaptive)
+            // Create multiple threads to process the pixels in parallel
             while (numOfThreads-- > 0) {
                 new Thread(() -> {
-                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone())
-                        imageWriter.writePixel(pixel.col, pixel.row, rayTracer.TraceRays(constructRays(nX,
-                                nY, pixel.col, pixel.row)));
+                    // Iterate over each pixel in the image
+                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
+                        // Construct rays for the current pixel and trace them using the ray tracer
+                        List<Ray> rays = constructRays(nX, nY, pixel.col, pixel.row);
+                        Color pixelColor = rayTracer.TraceRays(rays);
+                        // Write the pixel color to the image writer
+                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
+                    }
                 }).start();
             }
+            // Wait for all the threads to finish processing the pixels
             Pixel.waitToFinish();
         }
         else {
+            // Render the image using adaptive super-sampling
+            // Create multiple threads to process the pixels in parallel
             while (numOfThreads-- > 0) {
                 new Thread(() -> {
-                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone())
-                        imageWriter.writePixel(pixel.col, pixel.row, SuperSampling(nX,
-                                nY, pixel.col, pixel.row, antiAliasing, false));
+                    // Iterate over each pixel in the image
+                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
+                        // Apply adaptive super-sampling to determine the pixel color
+                        Color pixelColor = SuperSampling(nX, nY, pixel.col, pixel.row, antiAliasing, false);
+                        // Write the pixel color to the image writer
+                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
+                    }
                 }).start();
             }
+            // Wait for all the threads to finish processing the pixels
             Pixel.waitToFinish();
         }
-
+        // Return the camera object
         return this;
     }
 
@@ -132,15 +146,19 @@ public class Camera {
         Point centralPixel = getCenterOfPixel(nX, nY, j, i);
         double rY = height / nY / antiAliasing;
         double rX = width / nX / antiAliasing;
+        // Variables to store the X and Y offsets of each sub-pixel within the anti-aliasing grid
         double x, y;
 
         for (int rowNumber = 0; rowNumber < antiAliasing; rowNumber++) {
             for (int colNumber = 0; colNumber < antiAliasing; colNumber++) {
+                // Calculate the X and Y offsets for the current sub-pixel
                 y = -(rowNumber - (antiAliasing - 1d) / 2) * rY;
                 x = (colNumber - (antiAliasing - 1d) / 2) * rX;
+                // Calculate the position of the current sub-pixel within the pixel
                 Point pIJ = centralPixel;
                 if (y != 0) pIJ = pIJ.add(vUp.scale(y));
                 if (x != 0) pIJ = pIJ.add(vRight.scale(x));
+                // Construct a ray from the camera position to the current sub-pixel
                 rays.add(new Ray(p0, pIJ.subtract(p0)));
             }
         }
@@ -158,21 +176,26 @@ public class Camera {
      * @return Pixel color
      */
     private Color SuperSampling(int nX, int nY, int j, int i,  int numOfRays, boolean adaptiveAlising)  {
+        // Get the right and up vectors of the camera
         Vector Vright = vRight;
         Vector Vup = vUp;
+        // Get the location of the camera
         Point cameraLoc = this.getP0();
+        // Calculate the number of rays in each row and column
         int numOfRaysInRowCol = (int)Math.floor(Math.sqrt(numOfRays));
-        if(numOfRaysInRowCol == 1)  return rayTracer.traceRay(constructRayThroughPixel(nX, nY, j, i));
-
+        // If the number of rays is 1, perform regular ray tracing
+        if(numOfRaysInRowCol == 1)
+            return rayTracer.traceRay(constructRayThroughPixel(nX, nY, j, i));
+        // Calculate the center point of the current pixel
         Point pIJ = getCenterOfPixel(nX, nY, j, i);
-
+        // Calculate the height and width ratios of the pixel
         double rY = alignZero(height / nY);
-        // the ratio Rx = w/Nx, the width of the pixel
         double rX = alignZero(width / nX);
 
-
+        // Calculate the pixel row and column ratios
         double PRy = rY/numOfRaysInRowCol;
         double PRx = rX/numOfRaysInRowCol;
+
         if (adaptiveAlising)
             return rayTracer.AdaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy,cameraLoc,Vright, Vup,null);
         else
@@ -346,8 +369,8 @@ public class Camera {
      */
     public Camera setVPDistance(double distance) {
         this.distance = distance;
-        // every time that we chang the distance from the view plane
-        // we will calculate the center point of the view plane aging
+        // every time that we change the distance from the view plane
+        // we will calculate the center point of the view plane again
         centerPoint = p0.add(vTo.scale(this.distance));
         return this;
     }
