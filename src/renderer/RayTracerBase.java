@@ -25,6 +25,13 @@ public abstract class RayTracerBase {
     public abstract Color traceRay(Ray ray);
 
     /**
+     * Trace the ray and calculates the color of the point that interact with the geometries of the scene
+     * @param rays the ray that came out of the camera
+     * @return the color of the object that the ray is interact with
+     */
+    public abstract Color TraceRays(List<Ray> rays);
+
+    /**
      * Checks the color of the pixel with the help of individual rays and averages between
      * them and only if necessary continues to send beams of rays in recursion
      * @param centerP center pixl

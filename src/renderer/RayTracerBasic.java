@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import static java.awt.Color.BLACK;
 import static primitives.Util.*;
 
 /**
@@ -44,6 +45,24 @@ public class RayTracerBasic extends RayTracerBase {
             return scene.background;
 
         return calcColor(closestPoint, ray);
+    }
+
+    /**
+     * Trace the ray and calculates the color of the point that interact with the geometries of the scene
+     *
+     * @param rays the ray that came out of the camera
+     * @return the color of the object that the ray is interact with
+     */
+    @Override
+    public Color TraceRays(List<Ray> rays) {
+        Color color = new Color(BLACK);
+        for (Ray ray : rays) {
+            GeoPoint clossestGeoPoint = findClosestIntersection(ray);
+            if (clossestGeoPoint == null)
+                color = color.add(scene.background);
+            else color = color.add(calcColor(clossestGeoPoint, ray));
+        }
+        return color.reduce(rays.size());
     }
 
     /**
