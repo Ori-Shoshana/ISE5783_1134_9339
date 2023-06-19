@@ -6,7 +6,10 @@ import scene.Scene;
 
 import static geometries.Intersectable.GeoPoint;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import static primitives.Util.*;
 
@@ -246,5 +249,118 @@ public class RayTracerBasic extends RayTracerBase {
             }
         }
         return ktr;
+    }
+
+    /**
+     * Checks the color of the pixel with the help of individual rays and averages between
+     * them and only if necessary continues to send beams of rays in recursion
+     *
+     * @param centerP   center pixel
+     * @param Width     Length
+     * @param Height    width
+     * @param minWidth  min Width
+     * @param minHeight min Height
+     * @param cameraLoc Camera location
+     * @param Vright    Vector right
+     * @param Vup       vector up
+     * @param prePoints pre Points
+     * @return Pixel color
+     */
+    @Override
+    public Color AdaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, Point cameraLoc, Vector Vright, Vector Vup, List<Point> prePoints) {
+        if (Width < minWidth * 2 || Height < minHeight * 2) {
+            return this.traceRay(new Ray(cameraLoc, centerP.subtract(cameraLoc)));
+        }
+
+        List<Point> nextCenterPList = new LinkedList<>();
+        List<Point> cornersList = new LinkedList<>();
+        List<primitives.Color> colorList = new LinkedList<>();
+        Point tempCorner;
+        Ray tempRay;
+        for (int i = -1; i <= 1; i += 2) {
+            for (int j = -1; j <= 1; j += 2) {
+                tempCorner = centerP.add(Vright.scale(i * Width / 2)).add(Vup.scale(j * Height / 2));
+                cornersList.add(tempCorner);
+                if (prePoints == null || !isInList(prePoints, tempCorner)) {
+                    tempRay = new Ray(cameraLoc, tempCorner.subtract(cameraLoc));
+                    nextCenterPList.add(centerP.add(Vright.scale(i * Width / 4)).add(Vup.scale(j * Height / 4)));
+                    colorList.add(traceRay(tempRay));
+                }
+            }
+        }
+
+
+        if (nextCenterPList == null || nextCenterPList.size() == 0) {
+            return primitives.Color.BLACK;
+        }
+
+
+        boolean isAllEquals = true;
+        primitives.Color tempColor = colorList.get(0);
+        for (primitives.Color color : colorList) {
+            if (!tempColor.isAlmostEquals(color))
+                isAllEquals = false;
+        }
+        if (isAllEquals && colorList.size() > 1)
+            return tempColor;
+
+
+        tempColor = primitives.Color.BLACK;
+        for (Point center : nextCenterPList) {
+            tempColor = tempColor.add(AdaptiveSuperSamplingRec(center, Width / 2, Height / 2, minWidth, minHeight, cameraLoc, Vright, Vup, cornersList));
+        }
+        return tempColor.reduce(nextCenterPList.size());
+    }
+
+    public Color RegularSuperSampling(Point centerP, double Width, double Height, double minWidth, double minHeight, Point cameraLoc, Vector Right, Vector Vup, List<Point> prePoints) {
+        List<Color> colorList = new ArrayList<>();
+
+        int numSubPixelsX = (int) Math.ceil(Width / minWidth);
+        int numSubPixelsY = (int) Math.ceil(Height / minHeight);
+
+        Random random = new Random();
+
+        for (int i = 0; i < numSubPixelsY; i++) {
+            for (int j = 0; j < numSubPixelsX; j++) {
+                double offsetX = minWidth * j;
+                double offsetY = minHeight * i;
+
+                double randomX = offsetX + random.nextDouble() * minWidth;
+                double randomY = offsetY + random.nextDouble() * minHeight;
+
+                Point subPixelPoint = centerP.add(Right.scale(randomX - Width / 2)).add(Vup.scale(randomY - Height / 2));
+
+
+                if (prePoints == null || !isInList(prePoints, subPixelPoint)) {
+                    Ray ray = new Ray(cameraLoc, subPixelPoint.subtract(cameraLoc));
+                    colorList.add(traceRay(ray));
+                }
+            }
+        }
+
+        if (colorList.isEmpty()) {
+            return primitives.Color.BLACK;
+        }
+
+        Color averageColor = Color.BLACK;
+        for (Color color : colorList) {
+            averageColor = averageColor.add(color);
+        }
+        return averageColor.reduce(colorList.size());
+    }
+
+    /**
+     * Find a point in the list
+     *
+     * @param pointsList the list
+     * @param point      the point that we look for
+     * @return
+     */
+    private boolean isInList(List<Point> pointsList, Point point) {
+        for (Point tempPoint : pointsList) {
+            if (point.equals(tempPoint))
+                return true;
+        }
+        return false;
     }
 }

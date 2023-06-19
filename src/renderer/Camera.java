@@ -1,14 +1,10 @@
 package renderer;
 
-import primitives.Color;
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.MissingResourceException;
-import java.util.Random;
 
 import static primitives.Util.*;
 /**
@@ -25,14 +21,15 @@ public class Camera {
     private double width; // Width of the view plane
     private double height; // Height of the view plane
     private double distance; // Distance of the view plane from the camera
+    private Point centerPoint;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
-    private int numOfRays = 1;
+    private int antiAliasing = 1;
     private boolean adaptive = false;
     private int numOfThreads = 1;
 
     public Camera setRaynum(int nRays){
-        numOfRays =nRays;
+        antiAliasing =nRays;
         return this;
     }
     /**
@@ -111,9 +108,9 @@ public class Camera {
      * @param yIndex The index of the pixel in the y-direction.
      */
     private Color castRay(int nX, int nY, int xIndex, int yIndex) {
-        if (numOfRays ==1) {
-            Ray ray = constructRay(nX, nY, xIndex, yIndex);
-            return rayTracer.traceRay(ray);
+        if (antiAliasing ==1) {
+            List<Ray>  ray = constructRays(nX, nY, xIndex, yIndex);
+            return rayTracer.traceRay(ray.get(0));
         }
         else {
             List<Ray> rays = constructRays( nX,  nY,  xIndex,  yIndex);
@@ -121,89 +118,187 @@ public class Camera {
         }
 
     }
-    /**
-     * Constructs a ray that passes through the specified pixel on the view plane.
-     *
-     * @param nX The number of pixels in the X direction.
-     * @param nY The number of pixels in the Y direction.
-     * @param j  The index of the pixel in the X direction.
-     * @param i  The index of the pixel in the Y direction.
-     * @return The ray that passes through the specified pixel on the view plane.
-     */
-    public Ray constructRay(int nX, int nY, int j, int i) {
-        Point pc = p0.add(vTo.scale(distance));     // The point center of the view plane
-        double Ry = height / nY;                      //  The pixel height
-        double Rx = width / nX;                       //  The pixel width
-
-        double yJ = alignZero(-(i - (nY - 1) / 2d) * Ry);
-        double xJ = alignZero((j - (nX - 1) / 2d) * Rx);
-
-        Point PIJ = pc;
-
-        if (!isZero(xJ))
-            PIJ = PIJ.add(vRight.scale(xJ));
-        if (!isZero(yJ))
-            PIJ = PIJ.add(vUp.scale(yJ));
-
-        return new Ray(p0, PIJ.subtract(p0));
-    }
+//    /**
+//     * Constructs a ray that passes through the specified pixel on the view plane.
+//     *
+//     * @param nX The number of pixels in the X direction.
+//     * @param nY The number of pixels in the Y direction.
+//     * @param j  The index of the pixel in the X direction.
+//     * @param i  The index of the pixel in the Y direction.
+//     * @return The ray that passes through the specified pixel on the view plane.
+//     */
+//    public Ray constructRay(int nX, int nY, int j, int i) {
+//        Point pc = p0.add(vTo.scale(distance));     // The point center of the view plane
+//        double Ry = height / nY;                      //  The pixel height
+//        double Rx = width / nX;                       //  The pixel width
+//
+//        double yJ = alignZero(-(i - (nY - 1) / 2d) * Ry);
+//        double xJ = alignZero((j - (nX - 1) / 2d) * Rx);
+//
+//        Point PIJ = pc;
+//
+//        if (!isZero(xJ))
+//            PIJ = PIJ.add(vRight.scale(xJ));
+//        if (!isZero(yJ))
+//            PIJ = PIJ.add(vUp.scale(yJ));
+//
+//        return new Ray(p0, PIJ.subtract(p0));
+//    }
 
     /**
      * Constructs a list of rays for a given image pixel.
      *
      * @param nX     The number of pixels in the X direction.
      * @param nY     The number of pixels in the Y direction.
-     * @param xPixel      The X index of the pixel.
-     * @param yPixel      The Y index of the pixel.
+     * @param //xPixel      The X index of the pixel.
+     * @param //yPixel      The Y index of the pixel.
      * @return The list of constructed rays.
      */
-    public List<Ray> constructRays(int nX, int nY, int xPixel, int yPixel) {
-        Random random = new Random();
+//    public List<Ray> constructRays(int nX, int nY, int xPixel, int yPixel) {
+//        Random random = new Random();
+//        List<Ray> rays = new LinkedList<>();
+//
+//        // Calculate the center point of the image on the view plane
+//        Point imageCenter = p0.add(vTo.scale(distance));
+//
+//        // Calculate the size of each pixel
+//        double pixelSizeX = width / nX;
+//        double pixelSizeY = height / nY;
+//
+//        // Calculate the coordinates of the current pixel relative to the image center
+//        double Xj = (xPixel - (double) (nX - 1) / 2) * pixelSizeX;
+//        double Yi = -(yPixel - (double) (nY - 1) / 2) * pixelSizeY;
+//
+//        // Calculate the point on the view plane corresponding to the current pixel
+//        Point Pxy = imageCenter;
+//
+//        if (alignZero(Xj) != 0) {
+//            Pxy = Pxy.add(vRight.scale(Xj));
+//        }
+//        if (alignZero(Yi) != 0) {
+//            Pxy = Pxy.add(vUp.scale(Yi));
+//        }
+//
+//        // Calculate the vector from the camera's location to the point on the view plane
+//        Vector Vij = Pxy.subtract(p0);
+//        Ray initialRay = new Ray(p0, Vij);
+//        rays.add(initialRay);
+//
+//        // Generate additional rays within the pixel
+//        for (int k = 0; k < numOfRays; k++) {
+//            // Generate random offsets within the pixel
+//            double x = random.nextDouble() * pixelSizeX - pixelSizeX / 2;
+//            double y = random.nextDouble() * pixelSizeY - pixelSizeY / 2;
+//
+//            // Calculate the new point on the view plane with the random offsets
+//            Point newPoint = Pxy.movePointOnViewPlane(vUp, vRight, x, y, pixelSizeX, pixelSizeY);
+//
+//            // Calculate the ray from the camera's location to the new point
+//            Ray newRay = calcRay(newPoint);
+//            rays.add(newRay);
+//        }
+//
+//        return rays;
+//    }
+    public List<Ray> constructRays(int nX, int nY, int j, int i) {
         List<Ray> rays = new LinkedList<>();
+        Point centralPixel = getCenterOfPixel(nX, nY, j, i);
+        double rY = height / nY / antiAliasing;
+        double rX = width / nX / antiAliasing;
+        double x, y;
 
-        // Calculate the center point of the image on the view plane
-        Point imageCenter = p0.add(vTo.scale(distance));
-
-        // Calculate the size of each pixel
-        double pixelSizeX = width / nX;
-        double pixelSizeY = height / nY;
-
-        // Calculate the coordinates of the current pixel relative to the image center
-        double Xj = (xPixel - (double) (nX - 1) / 2) * pixelSizeX;
-        double Yi = -(yPixel - (double) (nY - 1) / 2) * pixelSizeY;
-
-        // Calculate the point on the view plane corresponding to the current pixel
-        Point Pxy = imageCenter;
-        
-        if (alignZero(Xj) != 0) {
-            Pxy = Pxy.add(vRight.scale(Xj));
+        for (int rowNumber = 0; rowNumber < antiAliasing; rowNumber++) {
+            for (int colNumber = 0; colNumber < antiAliasing; colNumber++) {
+                y = -(rowNumber - (antiAliasing - 1d) / 2) * rY;
+                x = (colNumber - (antiAliasing - 1d) / 2) * rX;
+                Point pIJ = centralPixel;
+                if (y != 0) pIJ = pIJ.add(vUp.scale(y));
+                if (x != 0) pIJ = pIJ.add(vRight.scale(x));
+                rays.add(new Ray(p0, pIJ.subtract(p0)));
+            }
         }
-        if (alignZero(Yi) != 0) {
-            Pxy = Pxy.add(vUp.scale(Yi));
-        }
-
-        // Calculate the vector from the camera's location to the point on the view plane
-        Vector Vij = Pxy.subtract(p0);
-        Ray initialRay = new Ray(p0, Vij);
-        rays.add(initialRay);
-
-        // Generate additional rays within the pixel
-        for (int k = 0; k < numOfRays; k++) {
-            // Generate random offsets within the pixel
-            double x = random.nextDouble() * pixelSizeX - pixelSizeX / 2;
-            double y = random.nextDouble() * pixelSizeY - pixelSizeY / 2;
-
-            // Calculate the new point on the view plane with the random offsets
-            Point newPoint = Pxy.movePointOnViewPlane(vUp, vRight, x, y, pixelSizeX, pixelSizeY);
-
-            // Calculate the ray from the camera's location to the new point
-            Ray newRay = calcRay(newPoint);
-            rays.add(newRay);
-        }
-
         return rays;
     }
 
+    /**
+     * Checks the color of the pixel with the help of individual rays and averages between them and only
+     * if necessary continues to send beams of rays in recursion
+     * @param nX amount of pixels by length
+     * @param nY amount of pixels by width
+     * @param j The position of the pixel relative to the y-axis
+     * @param i The position of the pixel relative to the x-axis
+     * @param numOfRays The amount of rays sent
+     * @return Pixel color
+     */
+    private Color SuperSampling(int nX, int nY, int j, int i,  int numOfRays, boolean adaptiveAlising)  {
+        Vector Vright = vRight;
+        Vector Vup = vUp;
+        Point cameraLoc = this.getP0();
+        int numOfRaysInRowCol = (int)Math.floor(Math.sqrt(numOfRays));
+        if(numOfRaysInRowCol == 1)  return rayTracer.traceRay(constructRayThroughPixel(nX, nY, j, i));
+
+        Point pIJ = getCenterOfPixel(nX, nY, j, i);
+
+        double rY = alignZero(height / nY);
+        // the ratio Rx = w/Nx, the width of the pixel
+        double rX = alignZero(width / nX);
+
+
+        double PRy = rY/numOfRaysInRowCol;
+        double PRx = rX/numOfRaysInRowCol;
+        if (adaptiveAlising)
+            return rayTracer.AdaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy,cameraLoc,Vright, Vup,null);
+        else
+            return rayTracer.RegularSuperSampling(pIJ, rX, rY, PRx, PRy,cameraLoc,Vright, Vup,null);
+    }
+
+    /**
+     * get the center point of the pixel in the view plane
+     * @param nX number of pixels in the width of the view plane
+     * @param nY number of pixels in the height of the view plane
+     * @param j  index row in the view plane
+     * @param i  index column in the view plane
+     * @return the center point of the pixel
+     */
+    private Point getCenterOfPixel(int nX, int nY, int j, int i) {
+        // calculate the ratio of the pixel by the height and by the width of the view plane
+        // the ratio Ry = h/Ny, the height of the pixel
+        double rY = alignZero(height / nY);
+        // the ratio Rx = w/Nx, the width of the pixel
+        double rX = alignZero(width / nX);
+
+        // Xj = (j - (Nx -1)/2) * Rx
+        double xJ = alignZero((j - ((nX - 1d) / 2d)) * rX);
+        // Yi = -(i - (Ny - 1)/2) * Ry
+        double yI = alignZero(-(i - ((nY - 1d) / 2d)) * rY);
+
+        Point pIJ = centerPoint;
+
+        if (!isZero(xJ)) {
+            pIJ = pIJ.add(vRight.scale(xJ));
+        }
+        if (!isZero(yI)) {
+            pIJ = pIJ.add(vUp.scale(yI));
+        }
+        return pIJ;
+    }
+
+    /**
+     * construct ray through a pixel in the view plane
+     * nX and nY create the resolution
+     * @param nX number of pixels in the width of the view plane
+     * @param nY number of pixels in the height of the view plane
+     * @param j  index row in the view plane
+     * @param i  index column in the view plane
+     * @return ray that goes through the pixel (j, i)  Ray(p0, Vi,j)
+     */
+    public Ray constructRayThroughPixel(int nX, int nY, int j, int i) {
+        Point pIJ = getCenterOfPixel(nX, nY, j, i); // center point of the pixel
+
+        //Vi,j = Pi,j - P0, the direction of the ray to the pixel(j, i)
+        Vector vIJ = pIJ.subtract(p0);
+        return new Ray(p0, vIJ);
+    }
 
     /**
      * Calculates the sum of colors for a list of rays.
@@ -353,7 +448,26 @@ public class Camera {
      */
     public Camera setVPDistance(double distance) {
         this.distance = distance;
+        // every time that we chang the distance from the view plane
+        // we will calculate the center point of the view plane aging
+        centerPoint = p0.add(vTo.scale(this.distance));
         return this;
     }
 
+    /**
+     * set the adaptive
+     * @return the Camera object
+     */
+    public Camera setadaptive(boolean adaptive) {
+        this.adaptive = adaptive;
+        return this;
+    }
+
+    /**
+     * get of centerPoint
+     * @return point
+     */
+    public Point get_centerVPPoint() {
+        return centerPoint;
+    }
 }
